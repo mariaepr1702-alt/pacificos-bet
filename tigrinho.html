@@ -2,28 +2,71 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Jogo do Tigrinho - Pacíficos Bet</title>
+<title>Jogo do Tigrinho</title>
+
 <style>
 body{
-    background:#111;
+    background: linear-gradient(135deg, #111, #1b1b3a);
     color:white;
+    font-family: Arial;
     text-align:center;
-    font-family:Arial;
 }
+
+.container{
+    margin-top:40px;
+    background:#00000080;
+    padding:20px;
+    border-radius:15px;
+    width:350px;
+    margin:auto;
+}
+
 button{
-    padding:10px 20px;
-    margin-top:20px;
+    padding:10px;
+    margin-top:10px;
+    background:#ffcc00;
+    border:none;
+    font-size:18px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.05);
 }
 </style>
 </head>
 
 <body>
-<h1>🐯 JOGO DO TIGRINHO</h1>
-<p>Em breve o jogo real estará disponível aqui!</p>
 
-<a href="index.html">
-<button>⬅️ Voltar para o início</button>
-</a>
+<h1>🐯 Jogo do Tigrinho 🐯</h1>
+
+<div class="container">
+    <h2>Slots fake só para teste 😼</h2>
+
+    <h1 id="resultado">---</h1>
+
+    <button onclick="girar()">Girar</button>
+
+    <p id="mensagem"></p>
+</div>
+
+<script>
+function girar(){
+    let simbolos = ["🐯","🍒","⭐","💎","7️⃣"];
+    let r1 = simbolos[Math.floor(Math.random()*simbolos.length)];
+    let r2 = simbolos[Math.floor(Math.random()*simbolos.length)];
+    let r3 = simbolos[Math.floor(Math.random()*simbolos.length)];
+
+    document.getElementById("resultado").innerText = r1 + " " + r2 + " " + r3;
+
+    if(r1 === r2 && r2 === r3){
+        document.getElementById("mensagem").innerText = "🎉 VOCÊ GANHOU!";
+    } else {
+        document.getElementById("mensagem").innerText = "❌ Perdeu, tente de novo.";
+    }
+}
+</script>
 
 </body>
 </html>
