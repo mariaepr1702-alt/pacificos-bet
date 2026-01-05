@@ -3,27 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <title>Jogo do Avião - Pacíficos Bet</title>
+
 <style>
 body{
-    background:#111;
+    background:#0a0a0a;
     color:white;
     text-align:center;
     font-family:Arial;
 }
+
+h1{
+    margin-top:20px;
+}
+
+.game-box{
+    margin:auto;
+    margin-top:40px;
+    width:300px;
+    padding:30px;
+    border-radius:10px;
+    background:#1c1c1c;
+}
+
+.multiplier{
+    font-size:50px;
+    margin:20px 0;
+}
+
 button{
     padding:10px 20px;
-    margin-top:20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+#startBtn{
+    background:limegreen;
+}
+
+#cashoutBtn{
+    background:orange;
+    display:none;
+}
+
+.back{
+    margin-top:30px;
 }
 </style>
 </head>
 
 <body>
-<h1>✈️ JOGO DO AVIÃO</h1>
-<p>Em breve o jogo real estará disponível aqui!</p>
 
+<h1>✈️ JOGO DO AVIÃO — PACÍFICOS BET</h1>
+
+<div class="game-box">
+    <h2 id="status">Clique para começar</h2>
+
+    <div class="multiplier" id="multiplier">1.00x</div>
+
+    <button id="startBtn" onclick="startGame()">Começar</button>
+    <button id="cashoutBtn" onclick="cashOut()">Retirar</button>
+</div>
+
+<div class="back">
 <a href="index.html">
-<button>⬅️ Voltar para o início</button>
+<button>⬅️ Voltar</button>
 </a>
+</div>
+
+<script>
+let multiplier = 1;
+let interval;
+let crashed = false;
+
+function startGame(){
+    crashed = false;
+    multiplier = 1;
+
+    document.getElementById("status").innerText = "Avião subindo...";
+    document.getElementById("cashoutBtn").style.display = "inline-block";
+    document.getElementById("startBtn").style.display = "none";
+
+    interval = setInterval(()=>{
+        multiplier += 0.05;
+        document.getElementById("multiplier").innerText = multiplier.toFixed(2) + "x";
+
+        if(Math.random() < 0.02 * multiplier){
+            crash();
+        }
+
+    }, 200);
+}
+
+function crash(){
+    clearInterval(interval);
+    crashed = true;
+    document.getElementById("status").innerText = "💥 O avião caiu!";
+    document.getElementById("cashoutBtn").style.display = "none";
+    document.getElementById("startBtn").style.display = "inline-block";
+}
+
+function cashOut(){
+    if(!crashed){
+        clearInterval(interval);
+        document.getElementById("status").innerText = "✅ Você retirou em " + multiplier.toFixed(2) + "x";
+        document.getElementById("cashoutBtn").style.display = "none";
+        document.getElementById("startBtn").style.display = "inline-block";
+    }
+}
+</script>
 
 </body>
 </html>
