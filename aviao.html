@@ -8,80 +8,108 @@
 <style>
 
 body{
-    margin:0;
-    font-family:Arial;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    background:linear-gradient(#4fc3ff,#ffffff);
+  margin:0;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  background:linear-gradient(#4fc3ff,#ffffff);
 }
 
 .caixa{
-    width:340px;
-    padding:25px;
-    background:white;
-    border-radius:15px;
-    text-align:center;
-    box-shadow:0 0 12px rgba(0,0,0,.3);
+  width:340px;
+  padding:20px;
+  background:white;
+  border-radius:15px;
+  text-align:center;
+  box-shadow:0 0 12px rgba(0,0,0,.3);
 }
 
 .titulo{
-    font-size:20px;
-    font-weight:bold;
+  font-size:20px;
+  font-weight:bold;
 }
 
 .mult{
-    font-size:65px;
-    margin:5px 0 10px;
-}
-
-input{
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:18px;
-    text-align:center;
+  font-size:65px;
+  margin:5px 0;
 }
 
 label{
-    font-size:14px;
-    font-weight:bold;
+  font-size:14px;
+  font-weight:bold;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:18px;
+  text-align:center;
 }
 
 button{
-    width:100%;
-    padding:12px;
-    font-size:18px;
-    border:none;
-    border-radius:10px;
-    color:white;
-    cursor:pointer;
+  width:100%;
+  padding:12px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
 }
 
 .comecar{background:#28a745;}
 .retirar{background:#ff3b30;}
 
 .lucro{
-    font-size:20px;
-    margin-top:8px;
+  font-size:20px;
+  margin-top:8px;
 }
 
 .historicoBox{
-    margin-top:18px;
-    background:#fff;
-    border-radius:12px;
-    padding:10px;
-    box-shadow:0 0 10px rgba(0,0,0,.2);
+  margin-top:18px;
+  background:#fff;
+  border-radius:12px;
+  padding:10px;
+  box-shadow:0 0 10px rgba(0,0,0,.2);
 }
 
 .histLinha{
-    padding:7px;
-    margin:4px 0;
-    border-radius:8px;
-    color:white;
-    font-weight:bold;
+  padding:7px;
+  margin:4px 0;
+  border-radius:8px;
+  color:white;
+  font-weight:bold;
+}
+
+/* AREA DO AVIÃO */
+.sky{
+  width:100%;
+  height:170px;
+  background:linear-gradient(#6bd3ff,#bdf0ff);
+  border-radius:12px;
+  margin-bottom:12px;
+  position:relative;
+  overflow:hidden;
+}
+
+.aviao{
+  position:absolute;
+  left:-80px;
+  bottom:10px;
+  font-size:40px;
+  transition:all 0.2s linear;
+}
+
+.explodiu{
+  animation:boom .4s forwards;
+}
+
+@keyframes boom{
+  0%{transform:scale(1);}
+  100%{transform:scale(3); opacity:0;}
 }
 
 </style>
@@ -91,28 +119,33 @@ button{
 
 <div class="caixa">
 
-    <div class="titulo">✈️ PACÍFICOS BET</div>
-    <div id="status">Toque em começar</div>
+  <div class="titulo">✈️ PACÍFICOS BET</div>
 
-    <div class="mult" id="valor">1.00x</div>
+  <div class="sky">
+      <div id="plane" class="aviao">✈️</div>
+  </div>
 
-    <label>Valor da Aposta</label>
-    <input type="number" id="aposta" placeholder="Ex: 50" />
+  <div id="status">Toque em começar</div>
 
-    <div class="lucro">
-        Lucro: <span id="lucro">R$ 0,00</span>
-    </div>
+  <div class="mult" id="valor">1.00x</div>
 
-    <br>
+  <label>Valor da Aposta</label>
+  <input type="number" id="aposta" placeholder="Ex: 50" />
 
-    <button class="comecar" onclick="iniciar()">Começar</button>
-    <br><br>
-    <button class="retirar" onclick="retirar()">Retirar</button>
+  <div class="lucro">
+      Lucro: <span id="lucro">R$ 0,00</span>
+  </div>
 
-    <div class="historicoBox">
-        <b>Histórico</b>
-        <div id="lista"></div>
-    </div>
+  <br>
+
+  <button class="comecar" onclick="iniciar()">Começar</button>
+  <br><br>
+  <button class="retirar" onclick="retirar()">Retirar</button>
+
+  <div class="historicoBox">
+      <b>Histórico</b>
+      <div id="lista"></div>
+  </div>
 
 </div>
 
@@ -122,73 +155,89 @@ let ativo = false;
 let mult = 1;
 let timer;
 let historico = [];
+let pos = 0;
 
 function atualizarHistorico(valor){
-    historico.unshift(valor);
-    if(historico.length > 10) historico.pop();
+  historico.unshift(valor);
+  if(historico.length > 10) historico.pop();
 
-    let lista = document.getElementById("lista");
-    lista.innerHTML = "";
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
 
-    historico.forEach(v=>{
-        let div = document.createElement("div");
-        div.className="histLinha";
+  historico.forEach(v=>{
+      let div = document.createElement("div");
+      div.className="histLinha";
 
-        if(v < 2) div.style.background="#ff3b30";
-        else if(v < 5) div.style.background="#ffcc00";
-        else div.style.background="#28a745";
+      if(v < 2) div.style.background="#ff3b30";
+      else if(v < 5) div.style.background="#ffcc00";
+      else div.style.background="#28a745";
 
-        div.innerText = v.toFixed(2)+"x";
-        lista.appendChild(div);
-    });
+      div.innerText = v.toFixed(2)+"x";
+      lista.appendChild(div);
+  });
 }
 
 function atualizarLucro(){
-    const aposta = Number(document.getElementById("aposta").value || 0);
-    const lucro = aposta * mult - aposta;
+  const aposta = Number(document.getElementById("aposta").value || 0);
+  const lucro = aposta * mult - aposta;
 
-    document.getElementById("lucro").innerText =
-        "R$ " + lucro.toFixed(2).replace(".",",");
+  document.getElementById("lucro").innerText =
+      "R$ " + lucro.toFixed(2).replace(".",",");
+}
+
+function moverAviao(){
+  const plane = document.getElementById("plane");
+  pos += 3;
+  plane.style.left = pos + "px";
+  plane.style.bottom = (10 + pos/6) + "px";
 }
 
 function iniciar(){
-    if(ativo) return;
+  if(ativo) return;
 
-    mult = 1;
-    ativo = true;
-    document.getElementById("status").innerText = "✈️ Avião voando...";
+  mult = 1;
+  pos = 0;
+  ativo = true;
 
-    timer = setInterval(()=>{
-        mult += 0.04;
-        document.getElementById("valor").innerText = mult.toFixed(2)+"x";
+  document.getElementById("plane").classList.remove("explodiu");
+  document.getElementById("status").innerText = "✈️ Avião voando...";
 
-        atualizarLucro();
+  timer = setInterval(()=>{
+      mult += 0.04;
+      document.getElementById("valor").innerText = mult.toFixed(2)+"x";
 
-        let chance = Math.random();
-        if(chance < 0.01 + mult/80){
-            explodir();
-        }
+      atualizarLucro();
+      moverAviao();
 
-    },80);
+      let chance = Math.random();
+      if(chance < 0.01 + mult/80){
+          explodir();
+      }
+
+  },80);
 }
 
 function explodir(){
-    clearInterval(timer);
-    ativo = false;
-    document.getElementById("status").innerText = "💥 O avião explodiu!";
-    atualizarHistorico(mult);
+  clearInterval(timer);
+  ativo = false;
+
+  document.getElementById("status").innerText = "💥 O avião explodiu!";
+  document.getElementById("plane").classList.add("explodiu");
+
+  atualizarHistorico(mult);
+  document.getElementById("lucro").innerText = "R$ 0,00";
 }
 
 function retirar(){
-    if(!ativo) return;
+  if(!ativo) return;
 
-    clearInterval(timer);
-    ativo = false;
+  clearInterval(timer);
+  ativo = false;
 
-    document.getElementById("status").innerHTML =
-        "✅ Você retirou em "+mult.toFixed(2)+"x";
+  document.getElementById("status").innerHTML =
+      "✅ Você retirou em "+mult.toFixed(2)+"x";
 
-    atualizarHistorico(mult);
+  atualizarHistorico(mult);
 }
 
 </script>
