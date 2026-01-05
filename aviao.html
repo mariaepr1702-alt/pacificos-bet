@@ -1,107 +1,174 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jogo do Avião - Pacíficos Bet</title>
+<title>Avião - Pacíficos Bet</title>
 
 <style>
 
 body{
-  margin:0;
-  background:#000000;
-  color:white;
-  font-family:Arial;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  text-align:center;
+    margin:0;
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background:linear-gradient(#4fc3ff,#ffffff);
 }
 
-.container{
-  width: 90%;
-  max-width:360px;
-  background:white;
-  color:black;
-  padding:25px;
-  border-radius:12px;
+/*** CONTAINER PRINCIPAL ***/
+.area{
+    display:flex;
+    gap:15px;
 }
 
-.multiplier{
-  font-size:50px;
-  margin:20px 0;
+/*** HISTÓRICO LADO DIREITO ***/
+.historico{
+    width:95px;
+    padding:10px;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
 }
 
+.historico h3{
+    font-size:13px;
+    margin-top:0;
+    text-align:center;
+}
+
+.historico .item{
+    padding:6px;
+    margin:4px 0;
+    text-align:center;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:bold;
+    color:white;
+}
+
+/*** CAIXA DO JOGO ***/
+.caixa{
+    width:330px;
+    padding:25px;
+    background:white;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 0 12px rgba(0,0,0,.3);
+}
+
+.titulo{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.mult{
+    font-size:65px;
+    margin:15px 0;
+}
+
+/*** BOTÕES ***/
 button{
-  padding:10px 20px;
-  border:none;
-  border-radius:8px;
-  font-size:18px;
-  margin:5px;
+    width:100%;
+    padding:12px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
 }
 
-#startBtn{ background:green; color:white; }
-#cashoutBtn{ background:orange; color:black; display:none; }
+.comecar{background:#28a745;}
+.retirar{background:#ff3b30;}
 
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="area">
 
-<h2>✈️ PACÍFICOS BET</h2>
-<p id="status">Clique para começar</p>
+    <div class="caixa">
+        <div class="titulo">✈️ PACÍFICOS BET</div>
 
-<div class="multiplier" id="multiplier">1.00x</div>
+        <div id="status">Toque em começar</div>
 
-<button id="startBtn" onclick="startGame()">Começar</button>
-<button id="cashoutBtn" onclick="cashOut()">Retirar</button>
+        <div class="mult" id="valor">1.00x</div>
+
+        <button class="comecar" onclick="iniciar()">Começar</button>
+        <br><br>
+        <button class="retirar" onclick="retirar()">Retirar</button>
+    </div>
+
+    <div class="historico">
+        <h3>Histórico</h3>
+        <div id="lista"></div>
+    </div>
 
 </div>
 
 <script>
-let multiplier = 1;
-let interval;
-let crashed = false;
 
-function startGame(){
-  crashed = false;
-  multiplier = 1;
+let ativo = false;
+let mult = 1;
+let timer;
+let historico = [];
 
-  document.getElementById("status").innerText = "Avião subindo...";
-  document.getElementById("cashoutBtn").style.display = "inline-block";
-  document.getElementById("startBtn").style.display = "none";
+function atualizarHistorico(valor){
+    historico.unshift(valor);
+    if(historico.length > 8) historico.pop();
 
-  interval = setInterval(()=>{
+    let lista = document.getElementById("lista");
+    lista.innerHTML = "";
 
-    multiplier += 0.05;
-    document.getElementById("multiplier").innerText = multiplier.toFixed(2) + "x";
+    historico.forEach(v=>{
+        let div = document.createElement("div");
+        div.className="item";
+        
+        if(v < 2) div.style.background="#ff3b30";
+        else if(v < 5) div.style.background="#ffcc00";
+        else div.style.background="#28a745";
 
-    if(Math.random() < 0.02 * multiplier){
-      crash();
-    }
-
-  }, 200);
+        div.innerText = v.toFixed(2)+"x";
+        lista.appendChild(div);
+    });
 }
 
-function crash(){
-  clearInterval(interval);
-  crashed = true;
-  document.getElementById("status").innerText = "💥 O avião caiu!";
-  document.getElementById("cashoutBtn").style.display = "none";
-  document.getElementById("startBtn").style.display = "inline-block";
+function iniciar(){
+    if(ativo) return;
+
+    mult = 1;
+    ativo = true;
+    document.getElementById("status").innerText = "✈️ Avião voando...";
+    
+    timer = setInterval(()=>{
+        mult += 0.04;
+        document.getElementById("valor").innerText = mult.toFixed(2)+"x";
+
+        let chance = Math.random();
+        if(chance < 0.01 + mult/80){
+            explodir();
+        }
+
+    },80);
 }
 
-function cashOut(){
-  if(!crashed){
-    clearInterval(interval);
-    document.getElementById("status").innerText = "✅ Você retirou em " + multiplier.toFixed(2) + "x";
-    document.getElementById("cashoutBtn").style.display = "none";
-    document.getElementById("startBtn").style.display = "inline-block";
-  }
+function explodir(){
+    clearInterval(timer);
+    ativo = false;
+    document.getElementById("status").innerText = "💥 O avião explodiu!";
+    atualizarHistorico(mult);
 }
+
+function retirar(){
+    if(!ativo) return;
+    clearInterval(timer);
+    ativo = false;
+    document.getElementById("status").innerHTML = "✅ Você retirou em "+mult.toFixed(2)+"x";
+    atualizarHistorico(mult);
+}
+
 </script>
 
 </body>
