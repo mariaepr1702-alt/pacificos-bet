@@ -26,7 +26,7 @@ h1{
     padding:25px;
     border-radius:15px;
     background: linear-gradient(180deg,#1b1b1b,#000);
-    box-shadow:0 0 20px #ffb70055;
+    box-shadow:0 0 25px #ffb70070;
 }
 
 /* Painel */
@@ -73,10 +73,24 @@ h1{
     display:flex;
     justify-content:center;
     align-items:center;
-    transition:0.3s;
 }
 
-/* BOTÃO */
+/* Botões apostas rápidas */
+.bet-buttons{
+    margin-top:10px;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+.bet-buttons button{
+    background:#ffc400;
+    border:none;
+    border-radius:10px;
+    padding:7px 12px;
+}
+
+/* Botão girar */
 button{
     margin-top:15px;
     padding:12px 25px;
@@ -95,6 +109,16 @@ button:active{
     font-size:20px;
     margin-top:10px;
 }
+
+/* Efeito vitória */
+.win-glow{
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes glow{
+    from{box-shadow:0 0 10px #ffcc00}
+    to{box-shadow:0 0 35px #ffae00}
+}
 </style>
 </head>
 
@@ -102,7 +126,7 @@ button:active{
 
 <h1>🐯 TIGRINHO PREMIUM</h1>
 
-<div class="box">
+<div class="box" id="gamebox">
 
 <div class="panel">
     <span>💰 Saldo: <span class="gold" id="saldo">100</span></span>
@@ -111,7 +135,13 @@ button:active{
     </span>
 </div>
 
-<div class="slot-area">
+<div class="bet-buttons">
+    <button onclick="setBet(1)">R$1</button>
+    <button onclick="setBet(5)">R$5</button>
+    <button onclick="setBet(10)">R$10</button>
+</div>
+
+<div class="slot-area" id="slotArea">
     <div class="reels">
         <div class="reel" id="r1"><div>🐯</div></div>
         <div class="reel" id="r2"><div>⭐</div></div>
@@ -125,11 +155,24 @@ button:active{
 
 </div>
 
+<!-- Sons -->
+<audio id="spinSound">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-slot-machine-356.wav" type="audio/wav">
+</audio>
+
+<audio id="winSound">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav" type="audio/wav">
+</audio>
+
 <script>
 let saldo = 100;
 let simbolos = ["🐯","🍒","⭐","💎","7️⃣","🍋","🔔"];
 
 document.getElementById("saldo").innerText = saldo;
+
+function setBet(v){
+    document.getElementById("aposta").value = v;
+}
 
 function animar(reel){
     let div = reel.children[0];
@@ -142,6 +185,8 @@ function animar(reel){
 
 function girar(){
 
+    document.getElementById("slotArea").classList.remove("win-glow");
+
     let aposta = parseInt(document.getElementById("aposta").value);
     if(aposta > saldo){
         document.getElementById("msg").innerText = "Saldo insuficiente 😢";
@@ -150,6 +195,8 @@ function girar(){
 
     saldo -= aposta;
     document.getElementById("saldo").innerText = saldo;
+
+    document.getElementById("spinSound").play();
 
     let r1 = document.getElementById("r1");
     let r2 = document.getElementById("r2");
@@ -174,12 +221,15 @@ function girar(){
             saldo += ganho;
             document.getElementById("saldo").innerText = saldo;
             document.getElementById("msg").innerText = "🎉 JACKPOT! Você ganhou R$ " + ganho;
+            document.getElementById("slotArea").classList.add("win-glow");
+            document.getElementById("winSound").play();
         }
         else if(a===b || b===c || a===c){
             let ganho = aposta*2;
             saldo += ganho;
             document.getElementById("saldo").innerText = saldo;
             document.getElementById("msg").innerText = "✨ Você ganhou R$ " + ganho;
+            document.getElementById("winSound").play();
         }
         else{
             document.getElementById("msg").innerText = "❌ Não foi dessa vez";
