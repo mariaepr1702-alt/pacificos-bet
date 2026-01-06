@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Login — PACÍFICOS BET</title>
+
+<style>
+body{
+    margin:0;
+    background:#0b0e21;
+    font-family: Arial;
+    color:white;
+    text-align:center;
+}
+
+header{
+    background:#ffcc00;
+    padding:20px;
+    color:black;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:420px;
+    margin:40px auto;
+    background:#101435;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 20px rgba(255,255,0,.2);
+}
+
+input{
+    width:90%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    margin-top:10px;
+}
+
+button{
+    width:95%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    background:#ffcc00;
+    color:black;
+    font-size:18px;
+    font-weight:bold;
+    margin-top:20px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#ffd633;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+PACÍFICOS BET — LOGIN
+</header>
+
+<div class="container">
+
+<h2>Entrar na conta 🔐</h2>
+
+<input id="email" type="email" placeholder="Seu e-mail">
+<input id="senha" type="password" placeholder="Senha">
+
+<button onclick="logar()">Entrar</button>
+
+<p id="mensagem"></p>
+
+<p>
+Não tem conta?
+<a href="cadastro.html" style="color:#ffcc00;">Criar conta</a>
+</p>
+
+</div>
+
+<script>
+function logar(){
+    document.getElementById("mensagem").innerHTML =
+    "Login simulado! Depois conectamos com banco de dados 😎";
+}
+</script>
+
+</body>
+</html>
