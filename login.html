@@ -84,6 +84,10 @@ a{
 </div>
 
 <script>
+
+// EMAIL OFICIAL DO ADMIN 👑
+const ADMIN_EMAIL = "mariaepr1702@gmail.com";
+
 function logar(){
 
     let email = document.getElementById("loginEmail").value;
@@ -105,9 +109,15 @@ function logar(){
         return;
     }
 
+    // verifica se é administrador
+    const ehAdmin = (email === ADMIN_EMAIL);
+
     // salva usuário logado
+    usuarioEncontrado.admin = ehAdmin;
+
     localStorage.setItem("usuarioLogado", JSON.stringify(usuarioEncontrado));
     localStorage.setItem("logged", "true");
+    localStorage.setItem("isAdmin", ehAdmin ? "true" : "false");
 
     alert("Login realizado com sucesso!");
 
