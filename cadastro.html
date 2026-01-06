@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cadastro — PACÍFICOS BET</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#0b0e21;
+    font-family: Arial;
+    color:white;
+    text-align:center;
+}
+
+header{
+    background:#ffcc00;
+    padding:20px;
+    color:black;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:420px;
+    margin:40px auto;
+    background:#101435;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 20px rgba(255,255,0,.2);
+}
+
+h2{
+    margin-bottom:10px;
+}
+
+input{
+    width:90%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    margin-top:10px;
+    font-size:15px;
+}
+
+button{
+    width:95%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    background:#ffcc00;
+    color:black;
+    font-size:18px;
+    font-weight:bold;
+    margin-top:20px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#ffd633;
+}
+
+a{
+    color:#ffcc00;
+}
+
+.success{
+    color:rgb(0, 255, 0);
+    margin-top:10px;
+}
+
+.error{
+    color:red;
+    margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+PACÍFICOS BET — CADASTRO
+</header>
+
+<div class="container">
+
+<h2>Crie sua conta 🐰</h2>
+<p>Jogue e aproveite nossos games</p>
+
+<input id="nome" type="text" placeholder="Seu nome completo">
+<input id="email" type="email" placeholder="Seu e-mail">
+<input id="senha" type="password" placeholder="Senha">
+<input id="confirmar" type="password" placeholder="Confirmar senha">
+
+<br>
+<label>
+<input type="checkbox" id="termos">
+ Aceito os termos de uso
+</label>
+
+<button onclick="cadastrar()">Criar conta</button>
+
+<p id="mensagem"></p>
+
+<p>Já tem conta?
+<a href="login.html">Entrar</a></p>
+
+</div>
+
+<script>
+
+function cadastrar(){
+
+    let nome = document.getElementById("nome").value;
+    let email = document.getElementById("email").value;
+    let senha = document.getElementById("senha").value;
+    let confirmar = document.getElementById("confirmar").value;
+    let termos = document.getElementById("termos").checked;
+    let msg = document.getElementById("mensagem");
+
+    if(nome === "" || email === "" || senha === "" || confirmar === ""){
+        msg.innerHTML = "Preencha todos os campos!";
+        msg.className = "error";
+        return;
+    }
+
+    if(senha !== confirmar){
+        msg.innerHTML = "As senhas não combinam!";
+        msg.className = "error";
+        return;
+    }
+
+    if(!termos){
+        msg.innerHTML = "Você precisa aceitar os termos!";
+        msg.className = "error";
+        return;
+    }
+
+    msg.innerHTML = "Conta criada com sucesso! 🎉";
+    msg.className = "success";
+
+    // 🔥 Por enquanto só simula.
+    // Depois vamos salvar isso no banco de dados de verdade.
+}
+
+</script>
+
+</body>
+</html>
