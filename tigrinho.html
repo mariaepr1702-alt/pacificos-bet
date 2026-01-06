@@ -6,76 +6,120 @@
 
 <style>
 body{
-    background:#0b0b2a;
+    background: radial-gradient(circle,#130f40,#000);
     color:white;
+    font-family: Arial;
     text-align:center;
-    font-family:Arial;
 }
 
-/* Caixa */
+/* Título */
+h1{
+    margin-top:20px;
+    font-size:30px;
+}
+
+/* Caixa do jogo */
 .box{
-    width:350px;
-    background:#00000070;
+    width:380px;
     margin:auto;
-    margin-top:30px;
-    padding:20px;
+    margin-top:20px;
+    padding:25px;
     border-radius:15px;
+    background: linear-gradient(180deg,#1b1b1b,#000);
+    box-shadow:0 0 20px #ffb70055;
 }
 
-/* SLOTS */
-.slots{
+/* Painel */
+.panel{
+    display:flex;
+    justify-content:space-between;
+    font-size:18px;
+    margin-bottom:10px;
+}
+
+.gold{
+    color:#ffcc00;
+    font-weight:bold;
+}
+
+/* SLOT REAL */
+.slot-area{
+    background:#111;
+    border:3px solid #ffcc00;
+    border-radius:15px;
+    padding:15px;
+}
+
+.reels{
     display:flex;
     justify-content:center;
     gap:10px;
-    margin:20px 0;
 }
 
-.slot{
-    width:80px;
-    height:80px;
+.reel{
+    width:90px;
+    height:90px;
     background:white;
-    color:black;
     border-radius:10px;
-    font-size:45px;
+    overflow:hidden;
+    position:relative;
+}
+
+.reel div{
+    position:absolute;
+    width:100%;
+    height:100%;
+    font-size:55px;
     display:flex;
     justify-content:center;
     align-items:center;
+    transition:0.3s;
 }
 
+/* BOTÃO */
 button{
-    padding:10px 20px;
+    margin-top:15px;
+    padding:12px 25px;
     background:#ffcc00;
     border:none;
     border-radius:10px;
     font-size:18px;
+    font-weight:bold;
+}
+
+button:active{
+    transform:scale(0.97);
 }
 
 #msg{
+    font-size:20px;
     margin-top:10px;
-    font-size:18px;
-    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🐯 TIGRINHO</h1>
+<h1>🐯 TIGRINHO PREMIUM</h1>
 
 <div class="box">
 
-<p>💰 Saldo: R$ <span id="saldo">100</span></p>
-
-Aposta:
-<input id="aposta" type="number" value="5" min="1">
-
-<div class="slots">
-    <div class="slot" id="s1">🐯</div>
-    <div class="slot" id="s2">⭐</div>
-    <div class="slot" id="s3">💎</div>
+<div class="panel">
+    <span>💰 Saldo: <span class="gold" id="saldo">100</span></span>
+    <span>🎲 Aposta: R$ 
+        <input id="aposta" type="number" value="5" min="1" style="width:60px;">
+    </span>
 </div>
 
-<button onclick="jogar()">GIRAR 🎰</button>
+<div class="slot-area">
+    <div class="reels">
+        <div class="reel" id="r1"><div>🐯</div></div>
+        <div class="reel" id="r2"><div>⭐</div></div>
+        <div class="reel" id="r3"><div>💎</div></div>
+    </div>
+</div>
+
+<button onclick="girar()">GIRAR 🎰</button>
 
 <p id="msg">Aperte para jogar</p>
 
@@ -85,19 +129,20 @@ Aposta:
 let saldo = 100;
 let simbolos = ["🐯","🍒","⭐","💎","7️⃣","🍋","🔔"];
 
-function animar(slot){
-    let i = 0;
+document.getElementById("saldo").innerText = saldo;
+
+function animar(reel){
+    let div = reel.children[0];
     let anima = setInterval(()=>{
-        slot.innerText = simbolos[Math.floor(Math.random()*simbolos.length)];
-        i++;
-        if(i===12) clearInterval(anima);
-    },100);
+        div.innerText = simbolos[Math.floor(Math.random()*simbolos.length)];
+    },70);
+
+    setTimeout(()=>clearInterval(anima),1000);
 }
 
-function jogar(){
+function girar(){
 
     let aposta = parseInt(document.getElementById("aposta").value);
-
     if(aposta > saldo){
         document.getElementById("msg").innerText = "Saldo insuficiente 😢";
         return;
@@ -106,40 +151,41 @@ function jogar(){
     saldo -= aposta;
     document.getElementById("saldo").innerText = saldo;
 
-    let s1 = document.getElementById("s1");
-    let s2 = document.getElementById("s2");
-    let s3 = document.getElementById("s3");
+    let r1 = document.getElementById("r1");
+    let r2 = document.getElementById("r2");
+    let r3 = document.getElementById("r3");
 
-    animar(s1);
-    animar(s2);
-    animar(s3);
+    animar(r1);
+    animar(r2);
+    animar(r3);
 
     setTimeout(()=>{
-        let r1 = simbolos[Math.floor(Math.random()*simbolos.length)];
-        let r2 = simbolos[Math.floor(Math.random()*simbolos.length)];
-        let r3 = simbolos[Math.floor(Math.random()*simbolos.length)];
 
-        s1.innerText = r1;
-        s2.innerText = r2;
-        s3.innerText = r3;
+        let a = simbolos[Math.floor(Math.random()*simbolos.length)];
+        let b = simbolos[Math.floor(Math.random()*simbolos.length)];
+        let c = simbolos[Math.floor(Math.random()*simbolos.length)];
 
-        if(r1===r2 && r2===r3){
-            let ganho = aposta*5;
+        r1.children[0].innerText = a;
+        r2.children[0].innerText = b;
+        r3.children[0].innerText = c;
+
+        if(a===b && b===c){
+            let ganho = aposta*6;
             saldo += ganho;
             document.getElementById("saldo").innerText = saldo;
-            document.getElementById("msg").innerText = "🎉 JACKPOT! Ganhou R$ "+ganho;
-        } 
-        else if(r1===r2 || r2===r3 || r1===r3){
+            document.getElementById("msg").innerText = "🎉 JACKPOT! Você ganhou R$ " + ganho;
+        }
+        else if(a===b || b===c || a===c){
             let ganho = aposta*2;
             saldo += ganho;
             document.getElementById("saldo").innerText = saldo;
-            document.getElementById("msg").innerText = "✨ Ganhou R$ "+ganho;
+            document.getElementById("msg").innerText = "✨ Você ganhou R$ " + ganho;
         }
         else{
-            document.getElementById("msg").innerText = "❌ Perdêu";
+            document.getElementById("msg").innerText = "❌ Não foi dessa vez";
         }
 
-    },1200);
+    },1100);
 }
 </script>
 
