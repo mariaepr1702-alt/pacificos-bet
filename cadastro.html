@@ -82,6 +82,20 @@ button:hover{
 
 <script>
 
+function calcularIdade(dataNasc){
+    const hoje = new Date();
+    const nasc = new Date(dataNasc);
+
+    let idade = hoje.getFullYear() - nasc.getFullYear();
+    const mes = hoje.getMonth() - nasc.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
+        idade--;
+    }
+
+    return idade;
+}
+
 function cadastrar(){
 
     let nome = document.getElementById("nome").value;
@@ -92,7 +106,6 @@ function cadastrar(){
     let termos = document.getElementById("termos").checked;
     let msg = document.getElementById("msg");
 
-    // --- validações ---
     if(nome === "" || email === "" || senha === "" || confirmar === "" || nascimento === ""){
         msg.innerHTML = "⚠️ Preencha todos os campos!";
         msg.style.color = "orange";
@@ -111,13 +124,21 @@ function cadastrar(){
         return;
     }
 
+    // 🔥 VALIDAÇÃO DE IDADE
+    let idade = calcularIdade(nascimento);
+
+    if(idade < 18){
+        msg.innerHTML = "🚫 Você precisa ter pelo menos 18 anos para jogar!";
+        msg.style.color = "red";
+        return;
+    }
+
     if(!termos){
         msg.innerHTML = "⚠️ Você precisa aceitar os termos!";
         msg.style.color = "orange";
         return;
     }
 
-    // --- impede cadastro repetido ---
     let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
     let existe = usuarios.find(u => u.email === email);
@@ -128,7 +149,6 @@ function cadastrar(){
         return;
     }
 
-    // --- cria usuário ---
     let novoUsuario = {
         nome: nome,
         email: email,
