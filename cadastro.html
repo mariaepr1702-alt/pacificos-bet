@@ -2,106 +2,152 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Cadastro - Pacíficos Bet</title>
+<title>Cadastro - PACÍFICOS BET</title>
 
 <style>
-
 body{
-    background: linear-gradient(135deg, #111, #1b1b3a);
+    background: linear-gradient(135deg,#111,#1b1b3a);
     color:white;
     font-family:Arial;
     text-align:center;
     margin:0;
 }
 
-header{
-    background:#ffcc00;
-    color:#000;
-    padding:20px;
-    font-size:24px;
-    font-weight:bold;
-}
-
 .container{
-    margin-top:60px;
-    background:#000;
-    padding:30px;
+    background:#000000aa;
+    width:320px;
+    margin:40px auto;
+    padding:25px;
     border-radius:10px;
-    width:300px;
-    margin-left:auto;
-    margin-right:auto;
 }
 
 input{
     width:90%;
     padding:10px;
-    margin:10px 0;
     border-radius:6px;
     border:none;
+    margin-top:8px;
 }
 
 button{
     background:#ffcc00;
     color:black;
-    padding:10px 20px;
+    padding:10px;
+    width:95%;
     border:none;
     border-radius:8px;
     font-weight:bold;
+    margin-top:15px;
     cursor:pointer;
 }
 
 button:hover{
-    background:white;
+    opacity:0.8;
 }
 
-a{
-    color:#ffcc00;
+.msg{
+    margin-top:10px;
+    font-weight:bold;
 }
 </style>
-
 </head>
 
 <body>
 
-<header>
-    🎰 PACÍFICOS BET - CADASTRO 🎰
-</header>
+<h1>🔥 Cadastro PACÍFICOS BET 🔥</h1>
 
 <div class="container">
 
-    <h2>Crie sua conta</h2>
+    <input id="nome" placeholder="Nome completo">
+    <input id="email" type="email" placeholder="Email">
+    <input id="senha" type="password" placeholder="Senha">
+    <input id="confirmar" type="password" placeholder="Confirmar senha">
 
-    <input type="text" id="cadEmail" placeholder="Seu email">
-    <input type="password" id="cadSenha" placeholder="Sua senha">
+    <label>
+        <input type="date" id="nascimento" style="width:95%; margin-top:10px;">
+    </label>
+
+    <br><br>
+
+    <label>
+        <input type="checkbox" id="termos">
+        Aceito os termos do site
+    </label>
 
     <button onclick="cadastrar()">Cadastrar</button>
 
-    <p>Já tem conta?
-        <a href="login.html">Fazer login</a>
-    </p>
+    <p class="msg" id="msg"></p>
 
 </div>
 
 <script>
 
-function cadastrar() {
+function cadastrar(){
 
-    let email = document.getElementById("cadEmail").value;
-    let senha = document.getElementById("cadSenha").value;
+    let nome = document.getElementById("nome").value;
+    let email = document.getElementById("email").value;
+    let senha = document.getElementById("senha").value;
+    let confirmar = document.getElementById("confirmar").value;
+    let nascimento = document.getElementById("nascimento").value;
+    let termos = document.getElementById("termos").checked;
+    let msg = document.getElementById("msg");
 
-    if(email === "" || senha === ""){
-        alert("Preencha email e senha!");
+    // --- validações ---
+    if(nome === "" || email === "" || senha === "" || confirmar === "" || nascimento === ""){
+        msg.innerHTML = "⚠️ Preencha todos os campos!";
+        msg.style.color = "orange";
         return;
     }
 
-    // salva no navegador
-    localStorage.setItem("email", email);
-    localStorage.setItem("senha", senha);
+    if(senha.length < 6){
+        msg.innerHTML = "⚠️ A senha precisa ter pelo menos 6 caracteres!";
+        msg.style.color = "orange";
+        return;
+    }
 
-    alert("Cadastro realizado com sucesso!");
-    window.location.href = "login.html";
+    if(senha !== confirmar){
+        msg.innerHTML = "❌ As senhas não coincidem!";
+        msg.style.color = "red";
+        return;
+    }
+
+    if(!termos){
+        msg.innerHTML = "⚠️ Você precisa aceitar os termos!";
+        msg.style.color = "orange";
+        return;
+    }
+
+    // --- impede cadastro repetido ---
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    let existe = usuarios.find(u => u.email === email);
+
+    if(existe){
+        msg.innerHTML = "❌ Este email já está cadastrado!";
+        msg.style.color = "red";
+        return;
+    }
+
+    // --- cria usuário ---
+    let novoUsuario = {
+        nome: nome,
+        email: email,
+        senha: senha,
+        nasc: nascimento,
+        saldo: 0
+    };
+
+    usuarios.push(novoUsuario);
+
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    msg.innerHTML = "✅ Cadastro realizado com sucesso!";
+    msg.style.color = "lightgreen";
+
+    setTimeout(()=>{
+        window.location.href = "login.html";
+    },1500);
 }
-
 </script>
 
 </body>
