@@ -2,90 +2,110 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Login — PACÍFICOS BET</title>
+<title>Login - Pacíficos Bet</title>
 
 <style>
+
 body{
-    margin:0;
-    background:#0b0e21;
-    font-family: Arial;
+    background: linear-gradient(135deg, #111, #1b1b3a);
     color:white;
+    font-family:Arial;
     text-align:center;
+    margin:0;
 }
 
 header{
     background:#ffcc00;
+    color:#000;
     padding:20px;
-    color:black;
     font-size:24px;
     font-weight:bold;
 }
 
 .container{
-    max-width:420px;
-    margin:40px auto;
-    background:#101435;
-    padding:25px;
+    margin-top:60px;
+    background:#000;
+    padding:30px;
     border-radius:10px;
-    box-shadow:0 0 20px rgba(255,255,0,.2);
+    width:300px;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 input{
     width:90%;
-    padding:12px;
-    border-radius:8px;
+    padding:10px;
+    margin:10px 0;
+    border-radius:6px;
     border:none;
-    margin-top:10px;
 }
 
 button{
-    width:95%;
-    padding:12px;
-    border-radius:8px;
-    border:none;
     background:#ffcc00;
     color:black;
-    font-size:18px;
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
     font-weight:bold;
-    margin-top:20px;
     cursor:pointer;
 }
 
 button:hover{
-    background:#ffd633;
+    background:white;
 }
+
+a{
+    color:#ffcc00;
+}
+
 </style>
+
 </head>
 
 <body>
 
 <header>
-PACÍFICOS BET — LOGIN
+    🔐 LOGIN - PACÍFICOS BET
 </header>
 
 <div class="container">
 
-<h2>Entrar na conta 🔐</h2>
+    <h2>Entre na sua conta</h2>
 
-<input id="email" type="email" placeholder="Seu e-mail">
-<input id="senha" type="password" placeholder="Senha">
+    <input type="text" id="loginEmail" placeholder="Seu email">
+    <input type="password" id="loginSenha" placeholder="Sua senha">
 
-<button onclick="logar()">Entrar</button>
+    <button onclick="logar()">Entrar</button>
 
-<p id="mensagem"></p>
-
-<p>
-Não tem conta?
-<a href="cadastro.html" style="color:#ffcc00;">Criar conta</a>
-</p>
+    <p>Não tem conta?
+        <a href="cadastro.html">Cadastrar</a>
+    </p>
 
 </div>
 
 <script>
+
 function logar(){
-    document.getElementById("mensagem").innerHTML =
-    "Login simulado! Depois conectamos com banco de dados 😎";
+
+    let email = document.getElementById("loginEmail").value;
+    let senha = document.getElementById("loginSenha").value;
+
+    let emailSalvo = localStorage.getItem("email");
+    let senhaSalva = localStorage.getItem("senha");
+
+    if(email === "" || senha === ""){
+        alert("Preencha email e senha!");
+        return;
+    }
+
+    if(email === emailSalvo && senha === senhaSalva){
+        alert("Login realizado com sucesso!");
+        window.location.href = "index.html";
+    } else {
+        alert("Email ou senha incorretos!");
+    }
 }
+
 </script>
 
 </body>
