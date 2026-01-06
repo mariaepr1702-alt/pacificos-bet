@@ -89,25 +89,29 @@ function logar(){
     let email = document.getElementById("loginEmail").value;
     let senha = document.getElementById("loginSenha").value;
 
-    let emailSalvo = localStorage.getItem("email");
-    let senhaSalva = localStorage.getItem("senha");
-
     if(email === "" || senha === ""){
         alert("Preencha email e senha!");
         return;
     }
 
-    if(email === emailSalvo && senha === senhaSalva){
+    // pega lista de usuarios cadastrados
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-        // mantém logado
-        localStorage.setItem("logged", "true");
+    // procura email + senha
+    let usuarioEncontrado = usuarios.find(u => u.email === email && u.senha === senha);
 
-        alert("Login realizado com sucesso!");
-        window.location.href = "index.html";
-
-    } else {
+    if(!usuarioEncontrado){
         alert("Email ou senha incorretos!");
+        return;
     }
+
+    // salva usuário logado
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuarioEncontrado));
+    localStorage.setItem("logged", "true");
+
+    alert("Login realizado com sucesso!");
+
+    window.location.href = "index.html";
 }
 </script>
 
