@@ -50,8 +50,8 @@ header h1{
     white-space:nowrap;
 }
 
-/* BOTÃO SAIR */
-.btn-sair{
+/* BOTÕES */
+.btn-topo{
     background:#000;
     color:#ffcc00;
     padding:8px 14px;
@@ -59,15 +59,15 @@ header h1{
     border:none;
     cursor:pointer;
     font-weight:bold;
+    text-decoration:none;
 }
 
-.btn-sair:hover{
+.btn-topo:hover{
     background:#ffcc00;
     color:black;
 }
 
 /* ====== CONTEÚDO ====== */
-
 h2 {
     margin-top: 30px;
 }
@@ -112,7 +112,12 @@ footer {
 
     <div class="menu-topo">
         <span id="usuarioLogado">Carregando...</span>
-        <button class="btn-sair" onclick="sair()">Sair</button>
+
+        <!-- BOTÃO PAINEL -->
+        <a href="painel.html" class="btn-topo">Painel</a>
+
+        <!-- BOTÃO SAIR -->
+        <button class="btn-topo" onclick="sair()">Sair</button>
     </div>
 </header>
 
