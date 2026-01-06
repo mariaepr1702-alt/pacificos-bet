@@ -12,18 +12,53 @@ body{
     text-align:center;
 }
 
+/* Caixa do jogo */
 .container{
-    margin-top:40px;
+    margin-top:20px;
     background:#00000080;
-    padding:20px;
+    padding:25px;
     border-radius:15px;
-    width:350px;
+    width:380px;
     margin:auto;
 }
 
+/* Tiger */
+.tiger{
+    font-size:70px;
+}
+
+/* Painel */
+.panel{
+    display:flex;
+    justify-content:space-between;
+    margin:15px 0;
+    font-size:18px;
+}
+
+/* Slot */
+.slot-box{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin:25px 0;
+}
+
+.slot{
+    width:80px;
+    height:80px;
+    background:white;
+    color:black;
+    border-radius:10px;
+    font-size:45px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+/* Botões */
 button{
-    padding:10px;
-    margin-top:10px;
+    padding:10px 20px;
     background:#ffcc00;
     border:none;
     font-size:18px;
@@ -34,37 +69,102 @@ button{
 button:hover{
     transform:scale(1.05);
 }
+
+#mensagem{
+    margin-top:15px;
+    font-size:20px;
+    font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
-<h1>🐯 Jogo do Tigrinho 🐯</h1>
+<h1 class="tiger">🐯</h1>
+<h1>JOGO DO TIGRINHO</h1>
 
 <div class="container">
-    <h2>Slots fake só para teste 😼</h2>
 
-    <h1 id="resultado">---</h1>
+    <div class="panel">
+        <span>💰 Saldo: R$ <span id="saldo">100</span></span>
+        <span>🎲 Aposta: R$ 
+            <input id="aposta" type="number" value="5" min="1" style="width:60px;">
+        </span>
+    </div>
 
-    <button onclick="girar()">Girar</button>
+    <!-- SLOTS -->
+    <div class="slot-box">
+        <div class="slot" id="s1">🐯</div>
+        <div class="slot" id="s2">⭐</div>
+        <div class="slot" id="s3">💎</div>
+    </div>
 
-    <p id="mensagem"></p>
+    <button onclick="girar()">GIRAR 🎰</button>
+
+    <p id="mensagem">Aperte para jogar</p>
+
 </div>
 
 <script>
+let saldo = 100;
+document.getElementById("saldo").innerText = saldo;
+
+let simbolos = ["🐯","🍒","⭐","💎","7️⃣","🍋","🔔"];
+
+function animar(slot){
+    let i = 0;
+    let interval = setInterval(()=>{
+        slot.innerText = simbolos[Math.floor(Math.random()*simbolos.length)];
+        i++;
+        if(i > 10) clearInterval(interval);
+    },100);
+}
+
 function girar(){
-    let simbolos = ["🐯","🍒","⭐","💎","7️⃣"];
-    let r1 = simbolos[Math.floor(Math.random()*simbolos.length)];
-    let r2 = simbolos[Math.floor(Math.random()*simbolos.length)];
-    let r3 = simbolos[Math.floor(Math.random()*simbolos.length)];
 
-    document.getElementById("resultado").innerText = r1 + " " + r2 + " " + r3;
-
-    if(r1 === r2 && r2 === r3){
-        document.getElementById("mensagem").innerText = "🎉 VOCÊ GANHOU!";
-    } else {
-        document.getElementById("mensagem").innerText = "❌ Perdeu, tente de novo.";
+    let aposta = parseInt(document.getElementById("aposta").value);
+    if(aposta > saldo){
+        document.getElementById("mensagem").innerText = "Saldo insuficiente 😢";
+        return;
     }
+
+    saldo -= aposta;
+    document.getElementById("saldo").innerText = saldo;
+
+    let s1 = document.getElementById("s1");
+    let s2 = document.getElementById("s2");
+    let s3 = document.getElementById("s3");
+
+    animar(s1);
+    animar(s2);
+    animar(s3);
+
+    setTimeout(()=>{
+        let r1 = simbolos[Math.floor(Math.random()*simbolos.length)];
+        let r2 = simbolos[Math.floor(Math.random()*simbolos.length)];
+        let r3 = simbolos[Math.floor(Math.random()*simbolos.length)];
+
+        s1.innerText = r1;
+        s2.innerText = r2;
+        s3.innerText = r3;
+
+        if(r1 === r2 && r2 === r3){
+            let ganho = aposta * 5;
+            saldo += ganho;
+            document.getElementById("saldo").innerText = saldo;
+            document.getElementById("mensagem").innerText = "🎉 JACKPOT! Você ganhou R$ " + ganho;
+        } 
+        else if(r1 === r2 || r2 === r3 || r1 === r3){
+            let ganho = aposta * 2;
+            saldo += ganho;
+            document.getElementById("saldo").innerText = saldo;
+            document.getElementById("mensagem").innerText = "✨ Você ganhou R$ " + ganho;
+        }
+        else{
+            document.getElementById("mensagem").innerText = "❌ Não foi dessa vez";
+        }
+
+    },1200);
 }
 </script>
 
