@@ -14,47 +14,59 @@ body {
     padding: 0;
 }
 
-header {
-    background: #ffcc00;
-    color: black;
-    padding: 25px;
-    font-size: 26px;
-    font-weight: bold;
-    position: relative;
+/* ====== HEADER PROFISSIONAL ====== */
+header{
+    background:#ffcc00;
+    color:black;
+    padding:15px 20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
 }
 
-/* === TOPO DIREITO (ARRUMADO) === */
+/* TÍTULO CENTRALIZADO */
+header h1{
+    margin:0;
+    font-size:26px;
+    font-weight:bold;
+}
+
+/* TOPO DIREITO */
 .menu-topo{
     position:absolute;
     right:20px;
-    top:10px;
+    top:50%;
+    transform:translateY(-50%);
     display:flex;
-    gap:12px;
+    gap:10px;
     align-items:center;
 }
 
-/* EMAIL DO USUÁRIO */
+/* NOME DO USUÁRIO */
 #usuarioLogado{
     color:black;
     font-weight:bold;
+    white-space:nowrap;
 }
 
 /* BOTÃO SAIR */
 .btn-sair{
     background:#000;
     color:#ffcc00;
-    padding:10px 18px;
+    padding:8px 14px;
     border-radius:8px;
-    text-decoration:none;
-    font-weight:bold;
     border:none;
     cursor:pointer;
+    font-weight:bold;
 }
 
 .btn-sair:hover{
     background:#ffcc00;
     color:black;
 }
+
+/* ====== CONTEÚDO ====== */
 
 h2 {
     margin-top: 30px;
@@ -96,7 +108,7 @@ footer {
 <body>
 
 <header>
-    🎰 PACÍFICOS BET 🎰
+    <h1>🎰 PACÍFICOS BET 🎰</h1>
 
     <div class="menu-topo">
         <span id="usuarioLogado">Carregando...</span>
@@ -138,7 +150,7 @@ if(logado !== "true"){
 // === MOSTRAR EMAIL DO USUÁRIO ===
 let email = localStorage.getItem("email");
 document.getElementById("usuarioLogado").innerText =
-"👤 Logado: " + email;
+"👤 " + email;
 
 // === LOGOUT ===
 function sair(){
