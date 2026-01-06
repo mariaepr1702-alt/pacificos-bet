@@ -14,7 +14,7 @@ body {
     padding: 0;
 }
 
-/* ====== HEADER PROFISSIONAL ====== */
+/* ====== HEADER ====== */
 header{
     background:#ffcc00;
     color:black;
@@ -25,7 +25,6 @@ header{
     position:relative;
 }
 
-/* TÍTULO CENTRALIZADO */
 header h1{
     margin:0;
     font-size:26px;
@@ -113,8 +112,10 @@ footer {
     <div class="menu-topo">
         <span id="usuarioLogado">Carregando...</span>
 
-        <!-- BOTÃO PAINEL -->
-        <a href="painel.html" class="btn-topo">Painel</a>
+        <!-- BOTÃO ADMIN (SÓ APARECE PARA VOCÊ) -->
+        <a id="btnAdmin" href="painel.html" class="btn-topo" style="display:none;">
+            Painel
+        </a>
 
         <!-- BOTÃO SAIR -->
         <button class="btn-topo" onclick="sair()">Sair</button>
@@ -146,20 +147,30 @@ footer {
 
 <script>
 // === PROTEGER PÁGINA ===
-let logado = localStorage.getItem("logged");
-
-if(logado !== "true"){
+if(localStorage.getItem("logged") !== "true"){
     window.location.href = "login.html";
 }
 
-// === MOSTRAR EMAIL DO USUÁRIO ===
-let email = localStorage.getItem("email");
-document.getElementById("usuarioLogado").innerText =
-"👤 " + email;
+// PEGAR USUÁRIO LOGADO
+let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-// === LOGOUT ===
+if(!usuario){
+    window.location.href = "login.html";
+}
+
+// MOSTRAR NOME / EMAIL
+document.getElementById("usuarioLogado").innerText =
+"👤 " + usuario.nome + " (" + usuario.email + ")";
+
+// LIBERAR BOTÃO DO ADMIN
+if(usuario.email === "mariaepr1702@gmail.com"){
+    document.getElementById("btnAdmin").style.display = "inline-block";
+}
+
+// LOGOUT
 function sair(){
     localStorage.removeItem("logged");
+    localStorage.removeItem("usuarioLogado");
     window.location.href = "login.html";
 }
 </script>
