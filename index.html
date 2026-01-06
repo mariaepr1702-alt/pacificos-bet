@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>PACÍFICOS BET</title>
+<meta charset="UTF-8">
+<title>PACÍFICOS BET</title>
 
 <style>
-
 body {
     background: linear-gradient(135deg, #111, #1b1b3a);
     color: white;
@@ -15,7 +14,6 @@ body {
     padding: 0;
 }
 
-/* HEADER */
 header {
     background: #ffcc00;
     color: black;
@@ -25,38 +23,40 @@ header {
     position: relative;
 }
 
-/* MENU DO TOPO */
+/* TOPO DIREITO */
 .menu-topo{
     position:absolute;
     top:50%;
     right:20px;
     transform:translateY(-50%);
-
     display:flex;
-    flex-direction:row;
-    align-items:center;
     gap:12px;
+    align-items:center;
 }
 
-/* BOTÕES */
-.btn-login,
-.btn-cadastro{
+/* EMAIL DO USUÁRIO */
+#usuarioLogado{
+    color:black;
+    font-weight:bold;
+}
+
+/* BOTÃO SAIR */
+.btn-sair{
     background:#000;
     color:#ffcc00;
     padding:10px 18px;
     border-radius:8px;
     text-decoration:none;
     font-weight:bold;
-    white-space:nowrap;
+    border:none;
+    cursor:pointer;
 }
 
-.btn-login:hover,
-.btn-cadastro:hover{
+.btn-sair:hover{
     background:#ffcc00;
     color:black;
 }
 
-/* RESTO DO SITE */
 h2 {
     margin-top: 30px;
 }
@@ -91,7 +91,6 @@ footer {
     background: #000;
     opacity: 0.8;
 }
-
 </style>
 </head>
 
@@ -101,8 +100,8 @@ footer {
     🎰 PACÍFICOS BET 🎰
 
     <div class="menu-topo">
-        <a href="login.html" class="btn-login">Login</a>
-        <a href="cadastro.html" class="btn-cadastro">Cadastro</a>
+        <span id="usuarioLogado">Carregando...</span>
+        <button class="btn-sair" onclick="sair()">Sair</button>
     </div>
 </header>
 
@@ -128,6 +127,26 @@ footer {
     Site em desenvolvimento<br>
     Em breve jogos reais + sistema de depósito 🔥
 </footer>
+
+<script>
+// === PROTEGER PÁGINA ===
+let logado = localStorage.getItem("logged");
+
+if(logado !== "true"){
+    window.location.href = "login.html";
+}
+
+// === MOSTRAR EMAIL DO USUÁRIO ===
+let email = localStorage.getItem("email");
+document.getElementById("usuarioLogado").innerText =
+"👤 Logado: " + email;
+
+// === LOGOUT ===
+function sair(){
+    localStorage.removeItem("logged");
+    window.location.href = "login.html";
+}
+</script>
 
 </body>
 </html>
