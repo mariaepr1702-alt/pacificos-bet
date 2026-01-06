@@ -2,66 +2,77 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Painel do Usuário - PACÍFICOS BET</title>
+<title>Painel do Usuário - Pacíficos Bet</title>
 
 <style>
 body{
-    background: linear-gradient(135deg, #111, #1b1b3a);
+    background:linear-gradient(135deg,#0b0b1a,#1b1b3a);
     color:white;
     font-family:Arial;
-    text-align:center;
     margin:0;
     padding:0;
+    text-align:center;
 }
 
+/* HEADER */
 header{
     background:#ffcc00;
     color:black;
-    padding:20px;
-    font-size:24px;
-    font-weight:bold;
+    padding:15px 20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
 }
 
-/* CAIXA */
-.box{
-    background:white;
-    color:black;
-    width:320px;
-    margin:40px auto;
-    padding:25px;
-    border-radius:10px;
+header h1{
+    margin:0;
 }
 
-/* SALDO */
-.saldo{
-    font-size:26px;
-    font-weight:bold;
-    margin:10px 0;
+/* TOPO DIREITO */
+.menu-topo{
+    position:absolute;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    gap:10px;
 }
 
-/* BOTÕES */
-button{
+.btn{
     background:#000;
     color:#ffcc00;
-    padding:10px 18px;
+    padding:8px 14px;
     border-radius:8px;
     border:none;
     cursor:pointer;
-    margin:5px;
     font-weight:bold;
+    text-decoration:none;
 }
 
-button:hover{
+.btn:hover{
     background:#ffcc00;
     color:black;
 }
 
-.voltar{
+/* CONTEÚDO */
+.caixa{
+    margin-top:40px;
+    background:#ffffff10;
+    padding:25px;
+    width:300px;
+    border-radius:12px;
     display:inline-block;
-    margin-top:15px;
-    text-decoration:none;
-    color:#ffcc00;
-    font-weight:bold;
+}
+
+.saldo{
+    font-size:28px;
+    margin:10px 0;
+    color:#00ff66;
+}
+
+.opcoes button{
+    margin:8px;
 }
 </style>
 </head>
@@ -69,70 +80,98 @@ button:hover{
 <body>
 
 <header>
-    👤 PAINEL DO USUÁRIO
+    <h1>👤 Painel do Usuário</h1>
+
+    <div class="menu-topo">
+        <a href="index.html" class="btn">Home</a>
+        <button onclick="sair()" class="btn">Sair</button>
+    </div>
 </header>
 
-<div class="box">
-    <h2>Bem-vindo!</h2>
+<h2 id="bemVindo">Carregando...</h2>
 
-    <p id="usuarioEmail">Carregando...</p>
+<div class="caixa">
+    <h3>💰 Seu Saldo</h3>
+    <div class="saldo" id="saldo">R$ 0,00</div>
 
-    <p>Seu saldo:</p>
-    <div class="saldo" id="valorSaldo">R$ 0,00</div>
-
-    <button onclick="adicionar()">Adicionar R$ 50</button>
-    <button onclick="remover()">Remover R$ 20</button>
-
-    <br>
-
-    <a href="index.html" class="voltar">⬅ Voltar para o Cassino</a>
+    <div class="opcoes">
+        <button class="btn" onclick="adicionarSaldo()">Adicionar Saldo</button>
+        <button class="btn" onclick="sacar()">Sacar</button>
+    </div>
 </div>
 
-
 <script>
-// ===== PROTEGER PÁGINA =====
-let logado = localStorage.getItem("logged");
-if(logado !== "true"){
+// ======== PROTEGER PAINEL ========
+if(localStorage.getItem("logged") !== "true"){
     window.location.href = "login.html";
 }
 
-// ===== MOSTRAR EMAIL DO USUÁRIO =====
+// ======== MOSTRAR EMAIL ========
 let email = localStorage.getItem("email");
-document.getElementById("usuarioEmail").innerText =
-"Email: " + email;
+document.getElementById("bemVindo").innerText =
+"Bem-vindo, " + email;
 
-// ===== SALDO =====
-// Se não existir saldo ainda, cria com 0
-if(localStorage.getItem("saldo") === null){
+// ======== SALDO ========
+let saldo = localStorage.getItem("saldo");
+
+if(!saldo){
+    saldo = 0;
     localStorage.setItem("saldo", 0);
-}
-
-function atualizarSaldo(){
-    let saldo = Number(localStorage.getItem("saldo"));
-    document.getElementById("valorSaldo").innerText =
-    "R$ " + saldo.toFixed(2).replace(".", ",");
 }
 
 atualizarSaldo();
 
-// ADICIONAR DINHEIRO
-function adicionar(){
-    let saldo = Number(localStorage.getItem("saldo"));
-    saldo += 50;
-    localStorage.setItem("saldo", saldo);
-    atualizarSaldo();
+// MOSTRAR NA TELA FORMATADO
+function atualizarSaldo(){
+    let s = localStorage.getItem("saldo");
+    document.getElementById("saldo").innerText =
+        "R$ " + Number(s).toFixed(2).replace(".", ",");
 }
 
-// REMOVER DINHEIRO
-function remover(){
-    let saldo = Number(localStorage.getItem("saldo"));
-    if(saldo >= 20){
-        saldo -= 20;
-        localStorage.setItem("saldo", saldo);
-        atualizarSaldo();
-    } else {
-        alert("Saldo insuficiente!");
+// ======== ADICIONAR SALDO (SIMULAÇÃO) ========
+function adicionarSaldo(){
+    let valor = prompt("Quanto deseja adicionar?");
+    if(!valor) return;
+
+    valor = Number(valor);
+
+    if(isNaN(valor) || valor <= 0){
+        alert("Valor inválido");
+        return;
     }
+
+    let atual = Number(localStorage.getItem("saldo"));
+    let novo = atual + valor;
+
+    localStorage.setItem("saldo", novo);
+    atualizarSaldo();
+    alert("Saldo adicionado com sucesso!");
+}
+
+// ======== SACAR (SIMULAÇÃO) ========
+function sacar(){
+    let valor = prompt("Quanto deseja sacar?");
+    if(!valor) return;
+
+    valor = Number(valor);
+
+    let atual = Number(localStorage.getItem("saldo"));
+
+    if(valor > atual){
+        alert("Saldo insuficiente!");
+        return;
+    }
+
+    let novo = atual - valor;
+    localStorage.setItem("saldo", novo);
+    atualizarSaldo();
+    alert("Saque realizado!");
+}
+
+// ======== SAIR ========
+function sair(){
+    localStorage.removeItem("logged");
+    window.location.href = "login.html";
 }
 </script>
 
