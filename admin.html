@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Painel Admin</title>
+
+<style>
+body{
+    background:#111;
+    color:white;
+    text-align:center;
+    font-family:Arial;
+}
+.box{
+    background:white;
+    color:black;
+    width:350px;
+    margin:40px auto;
+    padding:25px;
+    border-radius:10px;
+}
+button{
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>👑 Painel Administrativo</h1>
+
+<div class="box">
+    <h2>Bem-vindo Admin</h2>
+    <p>Somente administradores acessam aqui.</p>
+
+    <button onclick="voltar()">Voltar</button>
+</div>
+
+<script>
+function proteger(){
+    if(localStorage.getItem("role") !== "admin"){
+        alert("Acesso negado!");
+        window.location.href = "index.html";
+    }
+}
+function voltar(){
+    window.location.href = "index.html";
+}
+proteger();
+</script>
+
+</body>
+</html>
