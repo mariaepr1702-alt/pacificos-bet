@@ -2,45 +2,32 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Jogo do Tigrinho</title>
+<title>Tigrinho</title>
 
 <style>
 body{
-    background: linear-gradient(135deg, #111, #1b1b3a);
+    background:#0b0b2a;
     color:white;
-    font-family: Arial;
     text-align:center;
+    font-family:Arial;
 }
 
-/* Caixa do jogo */
-.container{
-    margin-top:20px;
-    background:#00000080;
-    padding:25px;
-    border-radius:15px;
-    width:380px;
+/* Caixa */
+.box{
+    width:350px;
+    background:#00000070;
     margin:auto;
+    margin-top:30px;
+    padding:20px;
+    border-radius:15px;
 }
 
-/* Tiger */
-.tiger{
-    font-size:70px;
-}
-
-/* Painel */
-.panel{
-    display:flex;
-    justify-content:space-between;
-    margin:15px 0;
-    font-size:18px;
-}
-
-/* Slot */
-.slot-box{
+/* SLOTS */
+.slots{
     display:flex;
     justify-content:center;
-    gap:15px;
-    margin:25px 0;
+    gap:10px;
+    margin:20px 0;
 }
 
 .slot{
@@ -53,26 +40,19 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    font-weight:bold;
 }
 
-/* Botões */
 button{
     padding:10px 20px;
     background:#ffcc00;
     border:none;
-    font-size:18px;
     border-radius:10px;
-    cursor:pointer;
+    font-size:18px;
 }
 
-button:hover{
-    transform:scale(1.05);
-}
-
-#mensagem{
-    margin-top:15px;
-    font-size:20px;
+#msg{
+    margin-top:10px;
+    font-size:18px;
     font-weight:bold;
 }
 </style>
@@ -80,51 +60,46 @@ button:hover{
 
 <body>
 
-<h1 class="tiger">🐯</h1>
-<h1>JOGO DO TIGRINHO</h1>
+<h1>🐯 TIGRINHO</h1>
 
-<div class="container">
+<div class="box">
 
-    <div class="panel">
-        <span>💰 Saldo: R$ <span id="saldo">100</span></span>
-        <span>🎲 Aposta: R$ 
-            <input id="aposta" type="number" value="5" min="1" style="width:60px;">
-        </span>
-    </div>
+<p>💰 Saldo: R$ <span id="saldo">100</span></p>
 
-    <!-- SLOTS -->
-    <div class="slot-box">
-        <div class="slot" id="s1">🐯</div>
-        <div class="slot" id="s2">⭐</div>
-        <div class="slot" id="s3">💎</div>
-    </div>
+Aposta:
+<input id="aposta" type="number" value="5" min="1">
 
-    <button onclick="girar()">GIRAR 🎰</button>
+<div class="slots">
+    <div class="slot" id="s1">🐯</div>
+    <div class="slot" id="s2">⭐</div>
+    <div class="slot" id="s3">💎</div>
+</div>
 
-    <p id="mensagem">Aperte para jogar</p>
+<button onclick="jogar()">GIRAR 🎰</button>
+
+<p id="msg">Aperte para jogar</p>
 
 </div>
 
 <script>
 let saldo = 100;
-document.getElementById("saldo").innerText = saldo;
-
 let simbolos = ["🐯","🍒","⭐","💎","7️⃣","🍋","🔔"];
 
 function animar(slot){
     let i = 0;
-    let interval = setInterval(()=>{
+    let anima = setInterval(()=>{
         slot.innerText = simbolos[Math.floor(Math.random()*simbolos.length)];
         i++;
-        if(i > 10) clearInterval(interval);
+        if(i===12) clearInterval(anima);
     },100);
 }
 
-function girar(){
+function jogar(){
 
     let aposta = parseInt(document.getElementById("aposta").value);
+
     if(aposta > saldo){
-        document.getElementById("mensagem").innerText = "Saldo insuficiente 😢";
+        document.getElementById("msg").innerText = "Saldo insuficiente 😢";
         return;
     }
 
@@ -148,20 +123,20 @@ function girar(){
         s2.innerText = r2;
         s3.innerText = r3;
 
-        if(r1 === r2 && r2 === r3){
-            let ganho = aposta * 5;
+        if(r1===r2 && r2===r3){
+            let ganho = aposta*5;
             saldo += ganho;
             document.getElementById("saldo").innerText = saldo;
-            document.getElementById("mensagem").innerText = "🎉 JACKPOT! Você ganhou R$ " + ganho;
+            document.getElementById("msg").innerText = "🎉 JACKPOT! Ganhou R$ "+ganho;
         } 
-        else if(r1 === r2 || r2 === r3 || r1 === r3){
-            let ganho = aposta * 2;
+        else if(r1===r2 || r2===r3 || r1===r3){
+            let ganho = aposta*2;
             saldo += ganho;
             document.getElementById("saldo").innerText = saldo;
-            document.getElementById("mensagem").innerText = "✨ Você ganhou R$ " + ganho;
+            document.getElementById("msg").innerText = "✨ Ganhou R$ "+ganho;
         }
         else{
-            document.getElementById("mensagem").innerText = "❌ Não foi dessa vez";
+            document.getElementById("msg").innerText = "❌ Perdêu";
         }
 
     },1200);
