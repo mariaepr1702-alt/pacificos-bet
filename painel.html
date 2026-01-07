@@ -2,175 +2,270 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Painel do Usuário - Pacíficos Bet</title>
+<title>Painel do Usuário - PACÍFICOS BET</title>
 
 <style>
 body{
-    background:linear-gradient(135deg,#0b0b1a,#1b1b3a);
-    color:white;
-    font-family:Arial;
     margin:0;
-    padding:0;
+    font-family: Arial;
+    background:#0b0b1c;
+    color:white;
+}
+
+/* LAYOUT */
+.container{
+    display:flex;
+}
+
+/* MENU LATERAL */
+.menu{
+    width:260px;
+    background:#000;
+    height:100vh;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.menu h2{
+    color:#ffcc00;
     text-align:center;
 }
 
-/* HEADER */
-header{
-    background:#ffcc00;
-    color:black;
-    padding:15px 20px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    position:relative;
-}
-
-header h1{
-    margin:0;
-}
-
-/* TOPO DIREITO */
-.menu-topo{
-    position:absolute;
-    right:20px;
-    top:50%;
-    transform:translateY(-50%);
-    display:flex;
-    gap:10px;
-}
-
-.btn{
-    background:#000;
-    color:#ffcc00;
-    padding:8px 14px;
-    border-radius:8px;
+.menu button{
+    width:100%;
+    padding:12px;
+    margin-top:8px;
     border:none;
+    border-radius:6px;
     cursor:pointer;
     font-weight:bold;
-    text-decoration:none;
+    background:#1b1b3a;
+    color:white;
 }
 
-.btn:hover{
+.menu button:hover{
     background:#ffcc00;
     color:black;
+}
+
+.logout{
+    background:red !important;
 }
 
 /* CONTEÚDO */
-.caixa{
-    margin-top:40px;
-    background:#ffffff10;
-    padding:25px;
-    width:300px;
-    border-radius:12px;
-    display:inline-block;
+.content{
+    flex:1;
+    padding:20px;
 }
 
-.saldo{
-    font-size:28px;
-    margin:10px 0;
-    color:#00ff66;
+/* CARDS */
+.cards{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
 }
 
-.opcoes button{
-    margin:8px;
+.card{
+    background:white;
+    color:black;
+    padding:20px;
+    border-radius:10px;
+    width:220px;
+}
+
+.card h3{
+    margin-top:0;
+}
+
+/* TABELAS */
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid #555;
+    padding:8px;
+    text-align:center;
+}
+
+th{
+    background:#ffcc00;
+    color:black;
+}
+
+/* OCULTAR PÁGINAS */
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* BOTÕES */
+.action{
+    background:#ffcc00;
+    color:black;
+    border:none;
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.action:hover{
+    background:black;
+    color:#ffcc00;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>👤 Painel do Usuário</h1>
+<div class="container">
 
-    <div class="menu-topo">
-        <a href="index.html" class="btn">Home</a>
-        <button onclick="sair()" class="btn">Sair</button>
+    <div class="menu">
+        <h2>🎰 PACÍFICOS BET</h2>
+
+        <button onclick="showPage('dashboard')">🏠 Dashboard</button>
+        <button onclick="showPage('carteira')">💰 Carteira</button>
+        <button onclick="showPage('apostas')">📜 Minhas Apostas</button>
+        <button onclick="showPage('perfil')">👤 Perfil</button>
+        <button onclick="showPage('seguranca')">🛡 Segurança</button>
+        <button onclick="sair()" class="logout">🚪 Sair</button>
     </div>
-</header>
 
-<h2 id="bemVindo">Carregando...</h2>
+    <div class="content">
 
-<div class="caixa">
-    <h3>💰 Seu Saldo</h3>
-    <div class="saldo" id="saldo">R$ 0,00</div>
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="page active">
+            <h1>Bem-vindo ao seu painel</h1>
 
-    <div class="opcoes">
-        <button class="btn" onclick="adicionarSaldo()">Adicionar Saldo</button>
-        <button class="btn" onclick="sacar()">Sacar</button>
+            <h3 id="nomeUsuario"></h3>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Saldo</h3>
+                    <p id="saldo">R$ 0,00</p>
+                    <button class="action" onclick="alert('Em breve PIX real')">Depositar</button>
+                    <button class="action" onclick="alert('Solicitação de saque em breve')">Sacar</button>
+                </div>
+
+                <div class="card">
+                    <h3>Estatísticas</h3>
+                    <p>Apostas Hoje: 0</p>
+                    <p>Ganhos Totais: R$ 0,00</p>
+                    <p>Perdas Totais: R$ 0,00</p>
+                </div>
+
+                <div class="card">
+                    <h3>Última atividade</h3>
+                    <p>Nenhuma ainda...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARTEIRA -->
+        <div id="carteira" class="page">
+            <h1>💰 Carteira</h1>
+
+            <h2>Saldo Atual: <span id="saldo2">R$ 0,00</span></h2>
+
+            <button class="action" onclick="alert('Depósito via PIX em breve')">Depositar</button>
+            <button class="action" onclick="alert('Solicitar saque em breve')">Solicitar Saque</button>
+
+            <h3>Histórico Financeiro</h3>
+            <table>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- APOSTAS -->
+        <div id="apostas" class="page">
+            <h1>📜 Minhas Apostas</h1>
+
+            <table>
+                <tr>
+                    <th>Data</th>
+                    <th>Jogo</th>
+                    <th>Valor</th>
+                    <th>Resultado</th>
+                </tr>
+                <tr>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- PERFIL -->
+        <div id="perfil" class="page">
+            <h1>👤 Meu Perfil</h1>
+
+            <p><b>Nome:</b> <span id="perfilNome"></span></p>
+            <p><b>Email:</b> <span id="perfilEmail"></span></p>
+            <p><b>Telefone:</b> <span id="perfilTel"></span></p>
+            <p><b>Data de Nascimento:</b> <span id="perfilNasc"></span></p>
+        </div>
+
+        <!-- SEGURANÇA -->
+        <div id="seguranca" class="page">
+            <h1>🛡 Segurança</h1>
+
+            <button class="action" onclick="alert('Troca de senha em breve')">Trocar senha</button>
+            <button class="action" onclick="alert('Função futura')">Ver logins recentes</button>
+            <button class="action" onclick="sair()">Sair de todos dispositivos</button>
+        </div>
+
     </div>
 </div>
 
 <script>
-// ======== PROTEGER PAINEL ========
-if(localStorage.getItem("logged") !== "true"){
+// PROTEGER PÁGINA
+let logado = localStorage.getItem("logged");
+if(logado !== "true"){
     window.location.href = "login.html";
 }
 
-// ======== MOSTRAR EMAIL ========
-let email = localStorage.getItem("email");
-document.getElementById("bemVindo").innerText =
-"Bem-vindo, " + email;
+// CARREGAR USUÁRIO
+let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-// ======== SALDO ========
-let saldo = localStorage.getItem("saldo");
+document.getElementById("nomeUsuario").innerText = usuario.nome;
+document.getElementById("perfilNome").innerText = usuario.nome;
+document.getElementById("perfilEmail").innerText = usuario.email;
+document.getElementById("perfilTel").innerText = usuario.telefone || "—";
+document.getElementById("perfilNasc").innerText = usuario.nascimento || "—";
 
-if(!saldo){
-    saldo = 0;
-    localStorage.setItem("saldo", 0);
+// SALDO (quando ativar depois será atualizado aqui)
+let saldo = localStorage.getItem("saldo") || "0.00";
+document.getElementById("saldo").innerText = "R$ " + saldo;
+document.getElementById("saldo2").innerText = "R$ " + saldo;
+
+// TROCAR PÁGINA
+function showPage(id){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
 }
 
-atualizarSaldo();
-
-// MOSTRAR NA TELA FORMATADO
-function atualizarSaldo(){
-    let s = localStorage.getItem("saldo");
-    document.getElementById("saldo").innerText =
-        "R$ " + Number(s).toFixed(2).replace(".", ",");
-}
-
-// ======== ADICIONAR SALDO (SIMULAÇÃO) ========
-function adicionarSaldo(){
-    let valor = prompt("Quanto deseja adicionar?");
-    if(!valor) return;
-
-    valor = Number(valor);
-
-    if(isNaN(valor) || valor <= 0){
-        alert("Valor inválido");
-        return;
-    }
-
-    let atual = Number(localStorage.getItem("saldo"));
-    let novo = atual + valor;
-
-    localStorage.setItem("saldo", novo);
-    atualizarSaldo();
-    alert("Saldo adicionado com sucesso!");
-}
-
-// ======== SACAR (SIMULAÇÃO) ========
-function sacar(){
-    let valor = prompt("Quanto deseja sacar?");
-    if(!valor) return;
-
-    valor = Number(valor);
-
-    let atual = Number(localStorage.getItem("saldo"));
-
-    if(valor > atual){
-        alert("Saldo insuficiente!");
-        return;
-    }
-
-    let novo = atual - valor;
-    localStorage.setItem("saldo", novo);
-    atualizarSaldo();
-    alert("Saque realizado!");
-}
-
-// ======== SAIR ========
+// LOGOUT
 function sair(){
     localStorage.removeItem("logged");
+    localStorage.removeItem("usuarioLogado");
     window.location.href = "login.html";
 }
 </script>
