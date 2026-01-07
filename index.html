@@ -25,7 +25,7 @@ header{
     align-items:center;
     padding:15px 20px;
     box-shadow:0 4px 10px rgba(0,0,0,.5);
-    border-bottom:4px solid #c69c6d;
+    border-bottom:4px solid #c69c6d; /* marrom areia */
 }
 
 header h1{
@@ -45,6 +45,7 @@ header h1{
     align-items:center;
 }
 
+/* NOME */
 #usuarioLogado{
     font-weight:bold;
     color:white;
@@ -132,7 +133,8 @@ h2{
     <div class="menu-topo">
         <span id="usuarioLogado">Carregando...</span>
 
-        <a id="btnAdmin" href="painel_admin.html" class="btn-topo btn-admin" style="display:none;">
+        <!-- CORRIGIDO AQUI 👇 -->
+        <a id="btnAdmin" href="admin-panel.html" class="btn-topo btn-admin" style="display:none;">
             Painel Administrativo
         </a>
 
@@ -152,6 +154,7 @@ h2{
     <a href="aviao.html"><div class="game">✈️ Avião</div></a>
 </div>
 
+
 <script>
 // proteção
 if(localStorage.getItem("logged") !== "true"){
@@ -164,9 +167,8 @@ if(!usuario){
     window.location.href="login.html";
 }
 
-// mostrar nome
 document.getElementById("usuarioLogado").innerText =
-"👤 " + usuario.nome + " (" + usuario.email + ")";
+"👤 " + usuario.nome;
 
 // ADMIN
 let adminEmail = "mariaepr1702@gmail.com";
