@@ -61,9 +61,14 @@ header h1{
     text-decoration:none;
 }
 
+/* BOTÃO ADMIN DIFERENTE */
+.btn-admin{
+    background:red;
+    color:white;
+}
+
 .btn-topo:hover{
-    background:#ffcc00;
-    color:black;
+    opacity:0.8;
 }
 
 /* ====== CONTEÚDO ====== */
@@ -112,9 +117,14 @@ footer {
     <div class="menu-topo">
         <span id="usuarioLogado">Carregando...</span>
 
-        <!-- BOTÃO ADMIN (SÓ APARECE PARA VOCÊ) -->
-        <a id="btnAdmin" href="painel.html" class="btn-topo" style="display:none;">
-            Painel
+        <!-- BOTÃO ADMIN -->
+        <a id="btnAdmin" href="painel_admin.html" class="btn-topo btn-admin" style="display:none;">
+            Painel Administrativo
+        </a>
+
+        <!-- BOTÃO USUÁRIO NORMAL -->
+        <a id="btnUser" href="painel.html" class="btn-topo" style="display:none;">
+            Meu Painel
         </a>
 
         <!-- BOTÃO SAIR -->
@@ -151,20 +161,24 @@ if(localStorage.getItem("logged") !== "true"){
     window.location.href = "login.html";
 }
 
-// PEGAR USUÁRIO LOGADO
+// PEGAR USUÁRIO
 let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
 
 if(!usuario){
     window.location.href = "login.html";
 }
 
-// MOSTRAR NOME / EMAIL
+// MOSTRAR INFO
 document.getElementById("usuarioLogado").innerText =
 "👤 " + usuario.nome + " (" + usuario.email + ")";
 
-// LIBERAR BOTÃO DO ADMIN
-if(usuario.email === "mariaepr1702@gmail.com"){
+// MOSTRAR BOTÕES CORRETOS
+let adminEmail = "mariaepr1702@gmail.com";
+
+if(usuario.email === adminEmail){
     document.getElementById("btnAdmin").style.display = "inline-block";
+} else {
+    document.getElementById("btnUser").style.display = "inline-block";
 }
 
 // LOGOUT
