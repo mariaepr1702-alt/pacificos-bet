@@ -25,7 +25,7 @@ header{
     align-items:center;
     padding:15px 20px;
     box-shadow:0 4px 10px rgba(0,0,0,.5);
-    border-bottom:4px solid #c69c6d; /* marrom areia */
+    border-bottom:4px solid #c69c6d;
 }
 
 header h1{
@@ -45,7 +45,6 @@ header h1{
     align-items:center;
 }
 
-/* NOME */
 #usuarioLogado{
     font-weight:bold;
     color:white;
@@ -122,8 +121,6 @@ h2{
     box-shadow:0 0 30px rgba(255,255,255,.6);
 }
 
-/* ===== REMOVIDO RODAPÉ ===== */
-
 </style>
 </head>
 
@@ -155,7 +152,6 @@ h2{
     <a href="aviao.html"><div class="game">✈️ Avião</div></a>
 </div>
 
-
 <script>
 // proteção
 if(localStorage.getItem("logged") !== "true"){
@@ -168,8 +164,9 @@ if(!usuario){
     window.location.href="login.html";
 }
 
+// mostrar nome
 document.getElementById("usuarioLogado").innerText =
-"👤 " + usuario.nome;
+"👤 " + usuario.nome + " (" + usuario.email + ")";
 
 // ADMIN
 let adminEmail = "mariaepr1702@gmail.com";
