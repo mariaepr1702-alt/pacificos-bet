@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Depósito PIX</title>
+
+<style>
+body{
+    background:#021b43;
+    color:white;
+    font-family:Arial;
+    padding:20px;
+}
+
+.box{
+    background:#0b2e6d;
+    padding:20px;
+    border-radius:12px;
+    border:2px solid #c69c6d;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    margin-top:8px;
+}
+
+button{
+    width:100%;
+    margin-top:12px;
+    padding:10px;
+    border-radius:10px;
+    border:2px solid #c69c6d;
+    background:white;
+    color:#0b2e6d;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#c69c6d;
+    color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<h2>💰 Depósito via PIX</h2>
+
+<div class="box">
+
+<p><b>Sua chave PIX:</b></p>
+<p style="background:white;color:black;padding:10px;border-radius:8px;">
+👉 SUA_CHAVE_PIX_AQUI
+</p>
+
+<label>Valor do depósito</label>
+<input type="number" id="valor" placeholder="Ex: 50">
+
+<button onclick="registrarDeposito()">Já fiz o PIX</button>
+
+</div>
+
+<script>
+// proteção
+if(localStorage.getItem("logged") !== "true"){
+    window.location.href="login.html";
+}
+
+let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+
+function registrarDeposito(){
+    let valor = Number(document.getElementById("valor").value);
+
+    if(valor <= 0){
+        alert("Digite um valor válido");
+        return;
+    }
+
+    let pendentes = JSON.parse(localStorage.getItem("depositosPendentes")) || [];
+
+    pendentes.push({
+        email: usuario.email,
+        nome: usuario.nome,
+        valor: valor,
+        status: "pendente",
+        data: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("depositosPendentes", JSON.stringify(pendentes));
+
+    alert("Depósito registrado! Aguarde aprovação do administrador.");
+    window.location.href="painel.html";
+}
+</script>
+
+</body>
+</html>
