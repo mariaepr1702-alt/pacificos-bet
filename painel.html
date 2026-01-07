@@ -2,271 +2,132 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Painel do Usuário - PACÍFICOS BET</title>
+<title>Painel do Usuário</title>
 
 <style>
 body{
-    margin:0;
-    font-family: Arial;
-    background:#0b0b1c;
+    background:#021b43;
     color:white;
-}
-
-/* LAYOUT */
-.container{
-    display:flex;
-}
-
-/* MENU LATERAL */
-.menu{
-    width:260px;
-    background:#000;
-    height:100vh;
-    padding:20px;
-    box-sizing:border-box;
-}
-
-.menu h2{
-    color:#ffcc00;
+    font-family:Arial;
+    margin:0;
     text-align:center;
 }
 
-.menu button{
-    width:100%;
-    padding:12px;
-    margin-top:8px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:bold;
-    background:#1b1b3a;
-    color:white;
-}
-
-.menu button:hover{
-    background:#ffcc00;
-    color:black;
-}
-
-.logout{
-    background:red !important;
-}
-
-/* CONTEÚDO */
-.content{
-    flex:1;
+header{
+    background:#0b2e6d;
     padding:20px;
+    font-size:22px;
+    font-weight:bold;
+    border-bottom:4px solid #c69c6d;
 }
 
-/* CARDS */
-.cards{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-.card{
+.box{
     background:white;
     color:black;
+    width:320px;
+    margin:30px auto;
     padding:20px;
     border-radius:10px;
-    width:220px;
 }
 
-.card h3{
-    margin-top:0;
-}
-
-/* TABELAS */
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:15px;
-}
-
-th,td{
-    border:1px solid #555;
+input{
+    width:90%;
     padding:8px;
-    text-align:center;
+    margin-top:8px;
+    border-radius:5px;
+    border:1px solid gray;
 }
 
-th{
-    background:#ffcc00;
-    color:black;
-}
-
-/* OCULTAR PÁGINAS */
-.page{
-    display:none;
-}
-
-.page.active{
-    display:block;
-}
-
-/* BOTÕES */
-.action{
-    background:#ffcc00;
-    color:black;
-    border:none;
-    padding:8px 14px;
+button{
+    background:#0b2e6d;
+    color:white;
+    padding:10px 18px;
     border-radius:8px;
+    border:none;
     cursor:pointer;
     font-weight:bold;
+    margin-top:10px;
 }
 
-.action:hover{
-    background:black;
-    color:#ffcc00;
+button:hover{
+    background:#c69c6d;
+    color:black;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<header>
+    💼 Painel do Usuário
+</header>
 
-    <div class="menu">
-        <h2>🎰 PACÍFICOS BET</h2>
+<h2>Bem-vindo, <span id="nomeUser"></span></h2>
 
-        <button onclick="showPage('dashboard')">🏠 Dashboard</button>
-        <button onclick="showPage('carteira')">💰 Carteira</button>
-        <button onclick="showPage('apostas')">📜 Minhas Apostas</button>
-        <button onclick="showPage('perfil')">👤 Perfil</button>
-        <button onclick="showPage('seguranca')">🛡 Segurança</button>
-        <button onclick="sair()" class="logout">🚪 Sair</button>
-    </div>
+<div class="box">
+    <h3>💰 Seu saldo</h3>
+    <h1 id="saldo">R$ 0,00</h1>
 
-    <div class="content">
+    <hr>
 
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="page active">
-            <h1>Bem-vindo ao seu painel</h1>
+    <h3>Adicionar Depósito</h3>
+    <input type="number" id="valorDeposito" placeholder="Valor em R$">
 
-            <h3 id="nomeUsuario"></h3>
-
-            <div class="cards">
-                <div class="card">
-                    <h3>Saldo</h3>
-                    <p id="saldo">R$ 0,00</p>
-                    <button class="action" onclick="alert('Em breve PIX real')">Depositar</button>
-                    <button class="action" onclick="alert('Solicitação de saque em breve')">Sacar</button>
-                </div>
-
-                <div class="card">
-                    <h3>Estatísticas</h3>
-                    <p>Apostas Hoje: 0</p>
-                    <p>Ganhos Totais: R$ 0,00</p>
-                    <p>Perdas Totais: R$ 0,00</p>
-                </div>
-
-                <div class="card">
-                    <h3>Última atividade</h3>
-                    <p>Nenhuma ainda...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- CARTEIRA -->
-        <div id="carteira" class="page">
-            <h1>💰 Carteira</h1>
-
-            <h2>Saldo Atual: <span id="saldo2">R$ 0,00</span></h2>
-
-            <button class="action" onclick="alert('Depósito via PIX em breve')">Depositar</button>
-            <button class="action" onclick="alert('Solicitar saque em breve')">Solicitar Saque</button>
-
-            <h3>Histórico Financeiro</h3>
-            <table>
-                <tr>
-                    <th>Tipo</th>
-                    <th>Valor</th>
-                    <th>Data</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- APOSTAS -->
-        <div id="apostas" class="page">
-            <h1>📜 Minhas Apostas</h1>
-
-            <table>
-                <tr>
-                    <th>Data</th>
-                    <th>Jogo</th>
-                    <th>Valor</th>
-                    <th>Resultado</th>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- PERFIL -->
-        <div id="perfil" class="page">
-            <h1>👤 Meu Perfil</h1>
-
-            <p><b>Nome:</b> <span id="perfilNome"></span></p>
-            <p><b>Email:</b> <span id="perfilEmail"></span></p>
-            <p><b>Telefone:</b> <span id="perfilTel"></span></p>
-            <p><b>Data de Nascimento:</b> <span id="perfilNasc"></span></p>
-        </div>
-
-        <!-- SEGURANÇA -->
-        <div id="seguranca" class="page">
-            <h1>🛡 Segurança</h1>
-
-            <button class="action" onclick="alert('Troca de senha em breve')">Trocar senha</button>
-            <button class="action" onclick="alert('Função futura')">Ver logins recentes</button>
-            <button class="action" onclick="sair()">Sair de todos dispositivos</button>
-        </div>
-
-    </div>
+    <button onclick="depositar()">Depositar</button>
 </div>
 
+<button onclick="voltar()">⬅️ Voltar</button>
+
 <script>
-// PROTEGER PÁGINA
-let logado = localStorage.getItem("logged");
-if(logado !== "true"){
-    window.location.href = "login.html";
+// PROTEGER
+if(localStorage.getItem("logged") !== "true"){
+    window.location.href="login.html";
 }
 
-// CARREGAR USUÁRIO
+// PEGAR USUÁRIO LOGADO
 let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+let todosUsuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-document.getElementById("nomeUsuario").innerText = usuario.nome;
-document.getElementById("perfilNome").innerText = usuario.nome;
-document.getElementById("perfilEmail").innerText = usuario.email;
-document.getElementById("perfilTel").innerText = usuario.telefone || "—";
-document.getElementById("perfilNasc").innerText = usuario.nascimento || "—";
-
-// SALDO (quando ativar depois será atualizado aqui)
-let saldo = localStorage.getItem("saldo") || "0.00";
-document.getElementById("saldo").innerText = "R$ " + saldo;
-document.getElementById("saldo2").innerText = "R$ " + saldo;
-
-// TROCAR PÁGINA
-function showPage(id){
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+// GARANTIR SALDO
+if(usuario.saldo === undefined){
+    usuario.saldo = 0;
+    atualizarBanco();
 }
 
-// LOGOUT
-function sair(){
-    localStorage.removeItem("logged");
-    localStorage.removeItem("usuarioLogado");
-    window.location.href = "login.html";
+document.getElementById("nomeUser").innerText = usuario.nome;
+atualizarTela();
+
+// ========= FUNÇÕES =========
+
+function atualizarTela(){
+    document.getElementById("saldo").innerText =
+        "R$ " + usuario.saldo.toFixed(2).replace(".", ",");
+}
+
+function atualizarBanco(){
+    let index = todosUsuarios.findIndex(u => u.email === usuario.email);
+    todosUsuarios[index] = usuario;
+    localStorage.setItem("usuarios", JSON.stringify(todosUsuarios));
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+}
+
+function depositar(){
+    let valor = Number(document.getElementById("valorDeposito").value);
+
+    if(valor <= 0 || isNaN(valor)){
+        alert("Digite um valor válido!");
+        return;
+    }
+
+    usuario.saldo += valor;
+    atualizarBanco();
+    atualizarTela();
+
+    alert("Depósito realizado com sucesso!");
+}
+
+function voltar(){
+    window.location.href="index.html";
 }
 </script>
 
