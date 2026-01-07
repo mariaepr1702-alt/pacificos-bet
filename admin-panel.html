@@ -81,6 +81,24 @@ th{
 .page.active{
     display:block;
 }
+
+/* BOTÃO */
+.btn{
+    padding:6px 10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.aprovar{
+    background:#2ecc71;
+    color:white;
+}
+
+.aprovar:hover{
+    background:#1b8f4d;
+}
 </style>
 </head>
 
@@ -123,8 +141,17 @@ th{
 
         <!-- FINANCEIRO -->
         <div id="financeiro" class="page">
-            <h1>💰 Financeiro</h1>
-            <p>(Futuro) Depósitos, saques, relatórios...</p>
+            <h1>💰 Depósitos Pendentes</h1>
+
+            <table id="tabelaDepositos">
+                <tr>
+                    <th>Usuário</th>
+                    <th>Email</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Ação</th>
+                </tr>
+            </table>
         </div>
 
         <!-- CONFIG -->
@@ -153,13 +180,11 @@ function showPage(id){
     document.getElementById(id).classList.add("active");
 }
 
-// CARREGAR DADOS
+/* ===== CARREGAR USUÁRIOS ===== */
 let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 document.getElementById("totalUsuarios").innerText = usuarios.length;
 
-// LISTA
 let tabela = document.getElementById("tabelaUsuarios");
-
 let soma = 0;
 
 usuarios.forEach(u=>{
@@ -176,6 +201,69 @@ usuarios.forEach(u=>{
 });
 
 document.getElementById("somaSaldo").innerText = soma.toFixed(2);
+
+/* ===== DEPÓSITOS PENDENTES ===== */
+let depositosPendentes = JSON.parse(localStorage.getItem("depositosPendentes")) || [];
+let tabelaDep = document.getElementById("tabelaDepositos");
+renderDepositos();
+
+function renderDepositos(){
+    tabelaDep.innerHTML = `
+        <tr>
+            <th>Usuário</th>
+            <th>Email</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th>Ação</th>
+        </tr>
+    `;
+
+    if(depositosPendentes.length === 0){
+        let tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="5">Nenhum depósito pendente</td>`;
+        tabelaDep.appendChild(tr);
+        return;
+    }
+
+    depositosPendentes.forEach((d,i)=>{
+        let tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${d.nome}</td>
+            <td>${d.email}</td>
+            <td>R$ ${Number(d.valor).toFixed(2)}</td>
+            <td>${d.data}</td>
+            <td>
+                <button class="btn aprovar" onclick="aprovar(${i})">Aprovar</button>
+            </td>
+        `;
+        tabelaDep.appendChild(tr);
+    });
+}
+
+function aprovar(index){
+    let dep = depositosPendentes[index];
+
+    // achar usuário
+    let user = usuarios.find(u => u.email === dep.email);
+    if(!user){
+        alert("Usuário não encontrado, não foi possível creditar.");
+        return;
+    }
+
+    user.saldo = Number(user.saldo || 0) + Number(dep.valor);
+
+    // salvar atualização
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    // remover da fila
+    depositosPendentes.splice(index,1);
+    localStorage.setItem("depositosPendentes", JSON.stringify(depositosPendentes));
+
+    alert("Depósito aprovado com sucesso!");
+
+    renderDepositos();
+    location.reload();
+}
 
 // SAIR
 function sair(){
