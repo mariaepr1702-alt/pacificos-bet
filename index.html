@@ -5,7 +5,6 @@
 <title>PACÍFICOS BET</title>
 
 <style>
-
 body{
     margin:0;
     font-family:Arial;
@@ -19,13 +18,12 @@ header{
     top:0;
     z-index:10;
     background:#0b2e6d;
-    color:white;
     display:flex;
     justify-content:center;
     align-items:center;
     padding:15px 20px;
     box-shadow:0 4px 10px rgba(0,0,0,.5);
-    border-bottom:4px solid #c69c6d; /* marrom areia */
+    border-bottom:4px solid #c69c6d;
 }
 
 header h1{
@@ -45,10 +43,8 @@ header h1{
     align-items:center;
 }
 
-/* NOME */
 #usuarioLogado{
     font-weight:bold;
-    color:white;
 }
 
 /* BOTÕES */
@@ -70,16 +66,9 @@ header h1{
     color:#000;
 }
 
-/* BOTÃO ADMIN */
 .btn-admin{
     background:#8b4513;
     color:white;
-    border-color:white;
-}
-
-.btn-admin:hover{
-    background:white;
-    color:#8b4513;
 }
 
 /* ===== TITULO ===== */
@@ -93,35 +82,48 @@ h2{
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
-    gap:25px;
-    margin-top:30px;
+    gap:30px;
+    margin:40px 0;
 }
 
-/* ===== CARDS ===== */
-.game{
-    width:200px;
-    height:140px;
-    border-radius:12px;
-    background:linear-gradient(135deg,#0b2e6d,#021b43);
+/* ===== CARD JOGO ===== */
+.game-card{
+    width:240px;
+    height:160px;
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+    cursor:pointer;
+    box-shadow:0 10px 25px rgba(0,0,0,.6);
     border:2px solid #c69c6d;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    transition:.3s;
+}
+
+.game-card:hover{
+    transform:scale(1.08);
+}
+
+/* IMAGEM */
+.game-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* OVERLAY */
+.game-overlay{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    padding:12px;
+    background:linear-gradient(to top,rgba(0,0,0,.8),transparent);
+    text-align:center;
+}
+
+.game-overlay span{
     font-size:18px;
     font-weight:bold;
-    color:white;
-    cursor:pointer;
-    transition:.3s;
-    box-shadow:0 0 15px rgba(255,255,255,.2);
 }
-
-.game:hover{
-    transform:scale(1.08);
-    background:white;
-    color:#0b2e6d;
-    box-shadow:0 0 30px rgba(255,255,255,.6);
-}
-
 </style>
 </head>
 
@@ -133,7 +135,6 @@ h2{
     <div class="menu-topo">
         <span id="usuarioLogado">Carregando...</span>
 
-        <!-- CORRIGIDO AQUI 👇 -->
         <a id="btnAdmin" href="admin-panel.html" class="btn-topo btn-admin" style="display:none;">
             Painel Administrativo
         </a>
@@ -149,11 +150,35 @@ h2{
 <h2>Escolha seu jogo</h2>
 
 <div class="games">
-    <a href="tigrinho.html"><div class="game">🐯 Tigrinho</div></a>
-    <a href="coelho.html"><div class="game">🐰 Coelho</div></a>
-    <a href="aviao.html"><div class="game">✈️ Avião</div></a>
-</div>
 
+    <a href="tigrinho.html">
+        <div class="game-card">
+            <img src="images/tigrinho.jpg" alt="Tigrinho">
+            <div class="game-overlay">
+                <span>🐯 Jogo do Tigrinho</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="coelho.html">
+        <div class="game-card">
+            <img src="images/coelho.jpg" alt="Coelho">
+            <div class="game-overlay">
+                <span>🐰 Jogo do Coelho</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="aviao.html">
+        <div class="game-card">
+            <img src="images/aviao.jpg" alt="Avião">
+            <div class="game-overlay">
+                <span>✈️ Jogo do Avião</span>
+            </div>
+        </div>
+    </a>
+
+</div>
 
 <script>
 // proteção
@@ -162,13 +187,11 @@ if(localStorage.getItem("logged") !== "true"){
 }
 
 let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
-
 if(!usuario){
     window.location.href="login.html";
 }
 
-document.getElementById("usuarioLogado").innerText =
-"👤 " + usuario.nome;
+document.getElementById("usuarioLogado").innerText = "👤 " + usuario.nome;
 
 // ADMIN
 let adminEmail = "mariaepr1702@gmail.com";
