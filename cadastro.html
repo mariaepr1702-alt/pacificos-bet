@@ -63,9 +63,7 @@ button:hover{
     <input id="senha" type="password" placeholder="Senha">
     <input id="confirmar" type="password" placeholder="Confirmar senha">
 
-    <label>
-        <input type="date" id="nascimento" style="width:95%; margin-top:10px;">
-    </label>
+    <input type="date" id="nascimento" style="width:95%; margin-top:10px;">
 
     <br><br>
 
@@ -81,7 +79,6 @@ button:hover{
 </div>
 
 <script>
-
 function calcularIdade(dataNasc){
     const hoje = new Date();
     const nasc = new Date(dataNasc);
@@ -92,81 +89,71 @@ function calcularIdade(dataNasc){
     if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
         idade--;
     }
-
     return idade;
 }
 
 function cadastrar(){
 
-    let nome = document.getElementById("nome").value;
-    let email = document.getElementById("email").value;
-    let senha = document.getElementById("senha").value;
-    let confirmar = document.getElementById("confirmar").value;
+    let nome = nome.value.trim();
+    let email = email.value.trim();
+    let senha = senha.value;
+    let confirmar = confirmar.value;
     let nascimento = document.getElementById("nascimento").value;
-    let termos = document.getElementById("termos").checked;
+    let termos = termos.checked;
     let msg = document.getElementById("msg");
 
-    if(nome === "" || email === "" || senha === "" || confirmar === "" || nascimento === ""){
-        msg.innerHTML = "⚠️ Preencha todos os campos!";
+    if(!nome || !email || !senha || !confirmar || !nascimento){
+        msg.innerText = "⚠️ Preencha todos os campos!";
         msg.style.color = "orange";
         return;
     }
 
     if(senha.length < 6){
-        msg.innerHTML = "⚠️ A senha precisa ter pelo menos 6 caracteres!";
+        msg.innerText = "⚠️ A senha precisa ter pelo menos 6 caracteres!";
         msg.style.color = "orange";
         return;
     }
 
     if(senha !== confirmar){
-        msg.innerHTML = "❌ As senhas não coincidem!";
+        msg.innerText = "❌ As senhas não coincidem!";
         msg.style.color = "red";
         return;
     }
 
-    // 🔥 VALIDAÇÃO DE IDADE
-    let idade = calcularIdade(nascimento);
-
-    if(idade < 18){
-        msg.innerHTML = "🚫 Você precisa ter pelo menos 18 anos para jogar!";
+    if(calcularIdade(nascimento) < 18){
+        msg.innerText = "🚫 Você precisa ter pelo menos 18 anos!";
         msg.style.color = "red";
         return;
     }
 
     if(!termos){
-        msg.innerHTML = "⚠️ Você precisa aceitar os termos!";
+        msg.innerText = "⚠️ Aceite os termos!";
         msg.style.color = "orange";
         return;
     }
 
     let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-    let existe = usuarios.find(u => u.email === email);
-
-    if(existe){
-        msg.innerHTML = "❌ Este email já está cadastrado!";
+    if(usuarios.some(u => u.email === email)){
+        msg.innerText = "❌ Email já cadastrado!";
         msg.style.color = "red";
         return;
     }
 
-    let novoUsuario = {
-        nome: nome,
-        email: email,
-        senha: senha,
-        nasc: nascimento,
+    usuarios.push({
+        nome,
+        email,
+        senha,
+        nascimento,
         saldo: 0
-    };
-
-    usuarios.push(novoUsuario);
+    });
 
     localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
-    msg.innerHTML = "✅ Cadastro realizado com sucesso!";
+    msg.innerText = "✅ Cadastro realizado com sucesso!";
     msg.style.color = "lightgreen";
 
-    setTimeout(()=>{
-        window.location.href = "login.html";
-    },1500);
+    setTimeout(()=>location.href="login.html",1500);
 }
 </script>
 
