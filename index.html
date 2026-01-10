@@ -12,45 +12,39 @@ body{
     color:white;
 }
 
-/* HEADER */
-header{
-    position:sticky;
-    top:0;
-    z-index:10;
+/* ===== FAIXA PRINCIPAL ===== */
+.top-bar{
     background:#0b2e6d;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:15px 20px;
-    box-shadow:0 4px 10px rgba(0,0,0,.5);
-    border-bottom:4px solid #c69c6d;
-}
-
-header h1{
-    margin:0;
-    font-size:26px;
-}
-
-/* MENU TOPO */
-.menu-topo{
-    position:absolute;
-    right:20px;
-    top:50%;
-    transform:translateY(-50%);
-    display:flex;
-    gap:10px;
-    align-items:center;
-}
-
-#usuarioLogado{
+    padding:18px;
+    text-align:center;
+    font-size:28px;
     font-weight:bold;
+    border-bottom:4px solid #c69c6d;
+    box-shadow:0 4px 10px rgba(0,0,0,.5);
+}
+
+/* ===== SUB FAIXA ===== */
+.sub-bar{
+    background:#021b43;
+    padding:8px 20px;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:15px;
+    font-size:14px;
+    border-bottom:1px solid #c69c6d;
+}
+
+.saldo{
+    font-weight:bold;
+    color:#c69c6d;
 }
 
 /* BOTÕES */
 .btn-topo{
     background:white;
     color:#0b2e6d;
-    padding:8px 14px;
+    padding:6px 12px;
     border-radius:10px;
     border:2px solid #c69c6d;
     cursor:pointer;
@@ -136,23 +130,26 @@ h2{
 
 <body>
 
-<header>
-    <h1>🎰 PACÍFICOS BET 🎰</h1>
+<!-- FAIXA PRINCIPAL -->
+<div class="top-bar">
+    🎰 PACÍFICOS BET 🎰
+</div>
 
-    <div class="menu-topo">
-        <span id="usuarioLogado">Carregando...</span>
+<!-- SUB FAIXA -->
+<div class="sub-bar">
+    <span id="usuarioLogado">👤 Usuário</span>
+    <span class="saldo" id="saldoUsuario">R$ 0,00</span>
 
-        <a id="btnAdmin" href="admin-panel.html" class="btn-topo btn-admin" style="display:none;">
-            Painel Administrativo
-        </a>
+    <a id="btnAdmin" href="admin-panel.html" class="btn-topo btn-admin" style="display:none;">
+        Admin
+    </a>
 
-        <a id="btnUser" href="painel.html" class="btn-topo" style="display:none;">
-            Meu Painel
-        </a>
+    <a id="btnUser" href="painel.html" class="btn-topo" style="display:none;">
+        Meu Painel
+    </a>
 
-        <button class="btn-topo" onclick="sair()">Sair</button>
-    </div>
-</header>
+    <button class="btn-topo" onclick="sair()">Sair</button>
+</div>
 
 <h2>Escolha seu jogo</h2>
 
@@ -182,6 +179,7 @@ h2{
 </div>
 
 <script>
+// proteção
 if(localStorage.getItem("logged") !== "true"){
     window.location.href="login.html";
 }
@@ -191,8 +189,16 @@ if(!usuario){
     window.location.href="login.html";
 }
 
-document.getElementById("usuarioLogado").innerText = "👤 " + usuario.nome;
+// nome
+document.getElementById("usuarioLogado").innerText =
+"👤 " + usuario.nome;
 
+// saldo (se não existir, fica 0)
+let saldo = usuario.saldo ?? 0;
+document.getElementById("saldoUsuario").innerText =
+"💰 R$ " + saldo.toFixed(2);
+
+// admin
 let adminEmail = "mariaepr1702@gmail.com";
 
 if(usuario.email === adminEmail){
@@ -201,6 +207,7 @@ if(usuario.email === adminEmail){
     document.getElementById("btnUser").style.display="inline-block";
 }
 
+// sair
 function sair(){
     localStorage.clear();
     window.location.href="login.html";
