@@ -11,24 +11,14 @@ body{
     background:#0b0b1c;
     color:white;
 }
-
-.container{
-    display:flex;
-}
-
-/* MENU LATERAL */
+.container{display:flex;}
 .menu{
     width:260px;
     background:#000;
     height:100vh;
     padding:20px;
 }
-
-.menu h2{
-    color:#ffcc00;
-    text-align:center;
-}
-
+.menu h2{color:#ffcc00;text-align:center;}
 .menu button{
     width:100%;
     padding:12px;
@@ -40,49 +30,29 @@ body{
     background:#1b1b3a;
     color:white;
 }
+.menu button:hover{background:#ffcc00;color:black;}
+.logout{background:red !important;}
 
-.menu button:hover{
-    background:#ffcc00;
-    color:black;
-}
+.content{flex:1;padding:20px;}
 
-.logout{
-    background:red !important;
-}
-
-/* CONTEÚDO */
-.content{
-    flex:1;
-    padding:20px;
-}
-
-/* TABELAS */
 table{
     width:100%;
     border-collapse:collapse;
     margin-top:15px;
 }
-
 th,td{
     border:1px solid #555;
     padding:8px;
     text-align:center;
 }
-
 th{
     background:#ffcc00;
     color:black;
 }
 
-.page{
-    display:none;
-}
+.page{display:none;}
+.page.active{display:block;}
 
-.page.active{
-    display:block;
-}
-
-/* BOTÃO */
 .btn{
     padding:6px 10px;
     border:none;
@@ -90,15 +60,10 @@ th{
     cursor:pointer;
     font-weight:bold;
 }
-
-.aprovar{
-    background:#2ecc71;
-    color:white;
-}
-
-.aprovar:hover{
-    background:#1b8f4d;
-}
+.aprovar{background:#2ecc71;color:white;}
+.aprovar:hover{background:#1e9e57;}
+.excluir{background:#e74c3c;color:white;}
+.excluir:hover{background:#b93225;}
 </style>
 </head>
 
@@ -106,170 +71,159 @@ th{
 
 <div class="container">
 
-    <div class="menu">
-        <h2>🛠 ADMIN</h2>
+<div class="menu">
+<h2>🛠 ADMIN</h2>
+<button onclick="showPage('dashboard')">📊 Dashboard</button>
+<button onclick="showPage('usuarios')">👥 Usuários</button>
+<button onclick="showPage('financeiro')">💰 Depósitos</button>
+<button onclick="sair()" class="logout">🚪 Sair</button>
+</div>
 
-        <button onclick="showPage('dashboard')">📊 Dashboard</button>
-        <button onclick="showPage('usuarios')">👥 Gerenciar Usuários</button>
-        <button onclick="showPage('financeiro')">💰 Financeiro</button>
-        <button onclick="showPage('config')">⚙️ Configurações</button>
-        <button onclick="sair()" class="logout">🚪 Sair</button>
-    </div>
+<div class="content">
 
-    <div class="content">
+<!-- DASHBOARD -->
+<div id="dashboard" class="page active">
+<h1>📊 Dashboard</h1>
+<p>Total de usuários: <b id="totalUsuarios">0</b></p>
+<p>Saldo total do sistema: <b>R$ <span id="somaSaldo">0,00</span></b></p>
+</div>
 
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="page active">
-            <h1>📊 Dashboard Administrativo</h1>
+<!-- USUÁRIOS -->
+<div id="usuarios" class="page">
+<h1>👥 Usuários</h1>
+<table id="tabelaUsuarios">
+<tr>
+<th>Nome</th>
+<th>Email</th>
+<th>Saldo</th>
+</tr>
+</table>
+</div>
 
-            <p>Total de usuários: <span id="totalUsuarios">0</span></p>
-            <p>Saldo total do sistema: R$ <span id="somaSaldo">0,00</span></p>
-        </div>
+<!-- FINANCEIRO -->
+<div id="financeiro" class="page">
+<h1>💰 Depósitos Pendentes</h1>
+<table id="tabelaDepositos">
+<tr>
+<th>Nome</th>
+<th>Email</th>
+<th>Valor</th>
+<th>CPF</th>
+<th>Status</th>
+<th>Ações</th>
+</tr>
+</table>
+</div>
 
-        <!-- USUÁRIOS -->
-        <div id="usuarios" class="page">
-            <h1>👥 Lista de Usuários</h1>
-
-            <table id="tabelaUsuarios">
-                <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Saldo</th>
-                </tr>
-            </table>
-        </div>
-
-        <!-- FINANCEIRO -->
-        <div id="financeiro" class="page">
-            <h1>💰 Depósitos Pendentes</h1>
-
-            <table id="tabelaDepositos">
-                <tr>
-                    <th>Usuário</th>
-                    <th>Email</th>
-                    <th>Valor</th>
-                    <th>Data</th>
-                    <th>Ação</th>
-                </tr>
-            </table>
-        </div>
-
-        <!-- CONFIG -->
-        <div id="config" class="page">
-            <h1>⚙️ Configurações</h1>
-            <p>Aqui depois vamos colocar ajustes do sistema.</p>
-        </div>
-
-    </div>
+</div>
 </div>
 
 <script>
-// PROTEÇÃO
+// ===== PROTEÇÃO ADMIN =====
 let logado = localStorage.getItem("logged");
-let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+let admin = JSON.parse(localStorage.getItem("usuarioLogado"));
 let emailAdmin = "mariaepr1702@gmail.com";
 
-if(logado !== "true" || !usuario || usuario.email !== emailAdmin){
-    alert("Acesso negado!");
-    window.location.href = "index.html";
+if(logado !== "true" || !admin || admin.email !== emailAdmin){
+    alert("Acesso negado");
+    window.location.href="index.html";
 }
 
-// TROCAR PÁGINA
+// ===== NAVEGAÇÃO =====
 function showPage(id){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById(id).classList.add("active");
 }
 
-/* ===== CARREGAR USUÁRIOS ===== */
+// ===== USUÁRIOS =====
 let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 document.getElementById("totalUsuarios").innerText = usuarios.length;
 
-let tabela = document.getElementById("tabelaUsuarios");
+let tabelaU = document.getElementById("tabelaUsuarios");
 let soma = 0;
 
 usuarios.forEach(u=>{
     let saldo = Number(u.saldo || 0);
     soma += saldo;
-
     let tr = document.createElement("tr");
     tr.innerHTML = `
         <td>${u.nome}</td>
         <td>${u.email}</td>
         <td>R$ ${saldo.toFixed(2)}</td>
     `;
-    tabela.appendChild(tr);
+    tabelaU.appendChild(tr);
 });
-
 document.getElementById("somaSaldo").innerText = soma.toFixed(2);
 
-/* ===== DEPÓSITOS PENDENTES ===== */
-let depositosPendentes = JSON.parse(localStorage.getItem("depositosPendentes")) || [];
-let tabelaDep = document.getElementById("tabelaDepositos");
+// ===== DEPÓSITOS =====
+let depositos = JSON.parse(localStorage.getItem("depositos")) || [];
+let tabelaD = document.getElementById("tabelaDepositos");
 renderDepositos();
 
 function renderDepositos(){
-    tabelaDep.innerHTML = `
-        <tr>
-            <th>Usuário</th>
-            <th>Email</th>
-            <th>Valor</th>
-            <th>Data</th>
-            <th>Ação</th>
-        </tr>
-    `;
+    tabelaD.innerHTML = `
+    <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Valor</th>
+        <th>CPF</th>
+        <th>Status</th>
+        <th>Ações</th>
+    </tr>`;
 
-    if(depositosPendentes.length === 0){
-        let tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="5">Nenhum depósito pendente</td>`;
-        tabelaDep.appendChild(tr);
+    if(depositos.length === 0){
+        tabelaD.innerHTML += `<tr><td colspan="6">Nenhum depósito</td></tr>`;
         return;
     }
 
-    depositosPendentes.forEach((d,i)=>{
+    depositos.forEach((d,i)=>{
         let tr = document.createElement("tr");
         tr.innerHTML = `
-            <td>${d.nome}</td>
-            <td>${d.email}</td>
-            <td>R$ ${Number(d.valor).toFixed(2)}</td>
-            <td>${d.data}</td>
-            <td>
-                <button class="btn aprovar" onclick="aprovar(${i})">Aprovar</button>
-            </td>
-        `;
-        tabelaDep.appendChild(tr);
+        <td>${d.nome}</td>
+        <td>${d.email}</td>
+        <td>R$ ${Number(d.valor).toFixed(2)}</td>
+        <td>${d.cpf}</td>
+        <td>${d.status}</td>
+        <td>
+            ${d.status==="Pendente" ? `
+            <button class="btn aprovar" onclick="aprovar(${i})">Aprovar</button>
+            <button class="btn excluir" onclick="rejeitar(${i})">Excluir</button>
+            ` : "-"}
+        </td>`;
+        tabelaD.appendChild(tr);
     });
 }
 
-function aprovar(index){
-    let dep = depositosPendentes[index];
-
-    // achar usuário
-    let user = usuarios.find(u => u.email === dep.email);
+function aprovar(i){
+    let dep = depositos[i];
+    let user = usuarios.find(u=>u.email===dep.email);
     if(!user){
-        alert("Usuário não encontrado, não foi possível creditar.");
+        alert("Usuário não encontrado");
         return;
     }
 
-    user.saldo = Number(user.saldo || 0) + Number(dep.valor);
+    user.saldo = Number(user.saldo||0) + Number(dep.valor);
+    dep.status = "Aprovado";
 
-    // salvar atualização
     localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    localStorage.setItem("depositos", JSON.stringify(depositos));
 
-    // remover da fila
-    depositosPendentes.splice(index,1);
-    localStorage.setItem("depositosPendentes", JSON.stringify(depositosPendentes));
-
-    alert("Depósito aprovado com sucesso!");
-
-    renderDepositos();
+    alert("Depósito aprovado!");
     location.reload();
 }
 
-// SAIR
+function rejeitar(i){
+    if(!confirm("Deseja excluir este depósito?")) return;
+    depositos.splice(i,1);
+    localStorage.setItem("depositos", JSON.stringify(depositos));
+    alert("Depósito excluído");
+    renderDepositos();
+}
+
+// ===== SAIR =====
 function sair(){
-    localStorage.removeItem("logged");
-    localStorage.removeItem("usuarioLogado");
-    window.location.href = "login.html";
+    localStorage.clear();
+    window.location.href="login.html";
 }
 </script>
 
