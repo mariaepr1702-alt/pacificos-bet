@@ -11,26 +11,14 @@ body{
     background:#0b0b1c;
     color:white;
 }
-
-/* LAYOUT */
-.container{
-    display:flex;
-}
-
-/* MENU LATERAL */
+.container{display:flex;}
 .menu{
     width:260px;
     background:#000;
     height:100vh;
     padding:20px;
-    box-sizing:border-box;
 }
-
-.menu h2{
-    color:#ffcc00;
-    text-align:center;
-}
-
+.menu h2{color:#ffcc00;text-align:center;}
 .menu button{
     width:100%;
     padding:12px;
@@ -42,72 +30,28 @@ body{
     background:#1b1b3a;
     color:white;
 }
-
-.menu button:hover{
-    background:#ffcc00;
-    color:black;
-}
-
-.logout{
-    background:red !important;
-}
-
-/* CONTEÚDO */
-.content{
-    flex:1;
-    padding:20px;
-}
-
-/* CARDS */
-.cards{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-}
+.menu button:hover{background:#ffcc00;color:black;}
+.logout{background:red !important;}
+.content{flex:1;padding:20px;}
 
 .card{
     background:white;
     color:black;
     padding:20px;
     border-radius:10px;
-    width:220px;
+    width:240px;
 }
+.cards{display:flex;gap:15px;flex-wrap:wrap;}
 
-.card h3{
-    margin-top:0;
-}
+table{width:100%;border-collapse:collapse;margin-top:15px;}
+th,td{border:1px solid #555;padding:8px;text-align:center;}
+th{background:#ffcc00;color:black;}
 
-/* TABELAS */
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:15px;
-}
+.page{display:none;}
+.page.active{display:block;}
 
-th,td{
-    border:1px solid #555;
-    padding:8px;
-    text-align:center;
-}
-
-th{
-    background:#ffcc00;
-    color:black;
-}
-
-/* OCULTAR PÁGINAS */
-.page{
-    display:none;
-}
-
-.page.active{
-    display:block;
-}
-
-/* BOTÕES */
 .action{
     background:#ffcc00;
-    color:black;
     border:none;
     padding:8px 14px;
     border-radius:8px;
@@ -115,36 +59,30 @@ th{
     font-weight:bold;
 }
 
-.action:hover{
-    background:black;
-    color:#ffcc00;
-}
-
-/* MODAL DEPÓSITO */
 .modal{
     position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#000000b8;
+    inset:0;
+    background:#000000c7;
     display:none;
     justify-content:center;
     align-items:center;
 }
-
 .modal-content{
     background:white;
     color:black;
     padding:20px;
     border-radius:10px;
-    width:300px;
+    width:320px;
     text-align:center;
 }
 .modal-content input{
     width:90%;
     padding:8px;
-    margin-top:10px;
+    margin-top:8px;
+}
+textarea{
+    width:90%;
+    height:80px;
 }
 </style>
 </head>
@@ -153,227 +91,165 @@ th{
 
 <div class="container">
 
-    <div class="menu">
-        <h2>🎰 PACÍFICOS BET</h2>
+<div class="menu">
+<h2>🎰 PACÍFICOS BET</h2>
+<button onclick="showPage('dashboard')">🏠 Dashboard</button>
+<button onclick="showPage('carteira')">💰 Carteira</button>
+<button onclick="showPage('perfil')">👤 Perfil</button>
+<button onclick="sair()" class="logout">🚪 Sair</button>
+</div>
 
-        <button onclick="showPage('dashboard')">🏠 Dashboard</button>
-        <button onclick="showPage('carteira')">💰 Carteira</button>
-        <button onclick="showPage('apostas')">📜 Minhas Apostas</button>
-        <button onclick="showPage('perfil')">👤 Perfil</button>
-        <button onclick="showPage('seguranca')">🛡 Segurança</button>
-        <button onclick="sair()" class="logout">🚪 Sair</button>
-    </div>
+<div class="content">
 
-    <div class="content">
+<div id="dashboard" class="page active">
+<h2 id="nomeUsuario"></h2>
 
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="page active">
-            <h1>Bem-vindo ao seu painel</h1>
+<div class="cards">
+<div class="card">
+<h3>Saldo</h3>
+<p id="saldo">R$ 0,00</p>
+<button class="action" onclick="abrirDeposito()">Depositar</button>
+</div>
+</div>
+</div>
 
-            <h3 id="nomeUsuario"></h3>
+<div id="carteira" class="page">
+<h2>Histórico</h2>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Valor</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="historicoTabela">
+<tr><td colspan="3">Nenhuma movimentação</td></tr>
+</tbody>
+</table>
+</div>
 
-            <div class="cards">
-                <div class="card">
-                    <h3>Saldo</h3>
-                    <p id="saldo">R$ 0,00</p>
-                    <button class="action" onclick="abrirDeposito()">Depositar</button>
-                    <button class="action" onclick="alert('Solicitação de saque em breve')">Sacar</button>
-                </div>
+<div id="perfil" class="page">
+<p><b>Nome:</b> <span id="perfilNome"></span></p>
+<p><b>Email:</b> <span id="perfilEmail"></span></p>
+</div>
 
-                <div class="card">
-                    <h3>Estatísticas</h3>
-                    <p>Apostas Hoje: 0</p>
-                    <p>Ganhos Totais: R$ 0,00</p>
-                    <p>Perdas Totais: R$ 0,00</p>
-                </div>
-
-                <div class="card">
-                    <h3>Última atividade</h3>
-                    <p id="ultimaAtividade">Nenhuma ainda...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- CARTEIRA -->
-        <div id="carteira" class="page">
-            <h1>💰 Carteira</h1>
-
-            <h2>Saldo Atual: <span id="saldo2">R$ 0,00</span></h2>
-
-            <button class="action" onclick="abrirDeposito()">Depositar</button>
-            <button class="action" onclick="alert('Solicitar saque em breve')">Solicitar Saque</button>
-
-            <h3>Histórico Financeiro</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Valor</th>
-                        <th>Data</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="historicoTabela">
-                    <tr>
-                        <td colspan="4">Nenhuma movimentação</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- APOSTAS -->
-        <div id="apostas" class="page">
-            <h1>📜 Minhas Apostas</h1>
-
-            <table>
-                <tr>
-                    <th>Data</th>
-                    <th>Jogo</th>
-                    <th>Valor</th>
-                    <th>Resultado</th>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- PERFIL -->
-        <div id="perfil" class="page">
-            <h1>👤 Meu Perfil</h1>
-
-            <p><b>Nome:</b> <span id="perfilNome"></span></p>
-            <p><b>Email:</b> <span id="perfilEmail"></span></p>
-            <p><b>Telefone:</b> <span id="perfilTel"></span></p>
-            <p><b>Data de Nascimento:</b> <span id="perfilNasc"></span></p>
-        </div>
-
-        <!-- SEGURANÇA -->
-        <div id="seguranca" class="page">
-            <h1>🛡 Segurança</h1>
-
-            <button class="action" onclick="alert('Troca de senha em breve')">Trocar senha</button>
-            <button class="action" onclick="alert('Função futura')">Ver logins recentes</button>
-            <button class="action" onclick="sair()">Sair de todos dispositivos</button>
-        </div>
-
-    </div>
+</div>
 </div>
 
 <!-- MODAL DEPÓSITO -->
 <div class="modal" id="modalDeposito">
-    <div class="modal-content">
-        <h3>Depósito via PIX</h3>
-        <p>Digite o valor:</p>
-        <input type="number" id="valorDeposito" placeholder="Ex: 50">
-        <br><br>
-        <button onclick="fazerDeposito()">Confirmar</button>
-        <button onclick="fecharDeposito()">Cancelar</button>
-    </div>
+<div class="modal-content">
+
+<h3>Depósito via PIX</h3>
+
+<input type="number" id="valorDeposito" placeholder="Valor">
+<input type="text" id="cpfDeposito" placeholder="CPF do pagador">
+
+<hr>
+
+<p><b>Escaneie o QR Code:</b></p>
+
+<img src="pix_qr.jpg.jpg" width="180">
+
+<p><b>Ou copie o código PIX:</b></p>
+
+<textarea readonly>
+00020126580014br.gov.bcb.pix013662b11a05-7d55-4f8b-93f2-6682a24b9b7b27600016BR.COM.PAGSEGURO013634D0550D-AFF5-443C-9FF0-60DAB1B02EF45204581253039865802BR5925Maria Eduarda Poleza Rosa6008Blumenau62290525PAGS00000000026010921189563045D9D
+</textarea>
+
+<br><br>
+
+<button class="action" onclick="confirmarDeposito()">Já fiz o PIX</button>
+<button onclick="fecharDeposito()">Cancelar</button>
+
+</div>
 </div>
 
 <script>
-// PROTEGER PÁGINA
-let logado = localStorage.getItem("logged");
-if(logado !== "true"){
-    window.location.href = "login.html";
+if(localStorage.getItem("logged")!=="true"){
+    window.location.href="login.html";
 }
 
-// CARREGAR USUÁRIO
 let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
-
 document.getElementById("nomeUsuario").innerText = usuario.nome;
 document.getElementById("perfilNome").innerText = usuario.nome;
 document.getElementById("perfilEmail").innerText = usuario.email;
-document.getElementById("perfilTel").innerText = usuario.telefone || "—";
-document.getElementById("perfilNasc").innerText = usuario.nascimento || "—";
 
-// SALDO
-let saldo = parseFloat(localStorage.getItem("saldo")) || 0;
-atualizarSaldo();
+let saldo = parseFloat(usuario.saldo || 0);
+document.getElementById("saldo").innerText = "R$ " + saldo.toFixed(2);
 
-// HISTÓRICO
 let historico = JSON.parse(localStorage.getItem("historico")) || [];
-carregarHistorico();
 
-// TROCAR PÁGINA
 function showPage(id){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById(id).classList.add("active");
 }
 
-// LOGOUT
-function sair(){
-    localStorage.removeItem("logged");
-    localStorage.removeItem("usuarioLogado");
-    window.location.href = "login.html";
-}
-
-/* ===== DEPÓSITO ===== */
 function abrirDeposito(){
     document.getElementById("modalDeposito").style.display="flex";
 }
-
 function fecharDeposito(){
     document.getElementById("modalDeposito").style.display="none";
 }
 
-function fazerDeposito(){
-    let valor = parseFloat(document.getElementById("valorDeposito").value);
+function confirmarDeposito(){
+    let valor = document.getElementById("valorDeposito").value;
+    let cpf = document.getElementById("cpfDeposito").value;
 
-    if(!valor || valor <= 0){
-        alert("Digite um valor válido");
+    if(!valor || !cpf){
+        alert("Preencha todos os campos");
         return;
     }
 
-    saldo += valor;
-    localStorage.setItem("saldo", saldo);
+    let depositos = JSON.parse(localStorage.getItem("depositos")) || [];
+
+    depositos.push({
+        email: usuario.email,
+        nome: usuario.nome,
+        valor: Number(valor),
+        cpf: cpf,
+        status: "Pendente"
+    });
+
+    localStorage.setItem("depositos", JSON.stringify(depositos));
 
     historico.push({
         tipo:"Depósito",
-        valor:valor,
-        data:new Date().toLocaleString(),
-        status:"Aprovado"
+        valor:Number(valor),
+        status:"Pendente"
     });
 
     localStorage.setItem("historico", JSON.stringify(historico));
 
-    atualizarSaldo();
     carregarHistorico();
-
-    document.getElementById("ultimaAtividade").innerText = "Depósito de R$ " + valor.toFixed(2);
     fecharDeposito();
-    alert("Depósito realizado com sucesso!");
-}
-
-function atualizarSaldo(){
-    document.getElementById("saldo").innerText = "R$ " + saldo.toFixed(2);
-    document.getElementById("saldo2").innerText = "R$ " + saldo.toFixed(2);
+    alert("Depósito enviado para análise!");
 }
 
 function carregarHistorico(){
-    const tabela = document.getElementById("historicoTabela");
-    tabela.innerHTML = "";
-
-    if(historico.length === 0){
-        tabela.innerHTML = `<tr><td colspan="4">Nenhuma movimentação</td></tr>`;
+    let tabela = document.getElementById("historicoTabela");
+    tabela.innerHTML="";
+    if(historico.length===0){
+        tabela.innerHTML="<tr><td colspan='3'>Nenhuma movimentação</td></tr>";
         return;
     }
-
-    historico.forEach(item=>{
-        let tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${item.tipo}</td>
-            <td>R$ ${item.valor.toFixed(2)}</td>
-            <td>${item.data}</td>
-            <td>${item.status}</td>
-        `;
+    historico.forEach(h=>{
+        let tr=document.createElement("tr");
+        tr.innerHTML=`
+        <td>${h.tipo}</td>
+        <td>R$ ${h.valor.toFixed(2)}</td>
+        <td>${h.status}</td>`;
         tabela.appendChild(tr);
     });
 }
+
+function sair(){
+    localStorage.clear();
+    window.location.href="login.html";
+}
+
+carregarHistorico();
 </script>
 
 </body>
