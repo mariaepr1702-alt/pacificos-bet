@@ -18,7 +18,10 @@ body{
     height:100vh;
     padding:20px;
 }
-.menu h2{color:#ffcc00;text-align:center;}
+.menu h2{
+    color:#ffcc00;
+    text-align:center;
+}
 .menu button{
     width:100%;
     padding:12px;
@@ -61,9 +64,7 @@ th{
     font-weight:bold;
 }
 .aprovar{background:#2ecc71;color:white;}
-.aprovar:hover{background:#1e9e57;}
 .excluir{background:#e74c3c;color:white;}
-.excluir:hover{background:#b93225;}
 </style>
 </head>
 
@@ -71,138 +72,136 @@ th{
 
 <div class="container">
 
+<!-- MENU -->
 <div class="menu">
-<h2>🛠 ADMIN</h2>
-<button onclick="showPage('dashboard')">📊 Dashboard</button>
-<button onclick="showPage('usuarios')">👥 Usuários</button>
-<button onclick="showPage('financeiro')">💰 Depósitos</button>
-<button onclick="sair()" class="logout">🚪 Sair</button>
+    <h2>🛠 ADMIN</h2>
+    <button onclick="showPage('dashboard')">📊 Dashboard</button>
+    <button onclick="showPage('usuarios')">👥 Usuários</button>
+    <button onclick="showPage('financeiro')">💰 Depósitos</button>
+    <button onclick="sair()" class="logout">🚪 Sair</button>
 </div>
 
+<!-- CONTEÚDO -->
 <div class="content">
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="page active">
-<h1>📊 Dashboard</h1>
-<p>Total de usuários: <b id="totalUsuarios">0</b></p>
-<p>Saldo total do sistema: <b>R$ <span id="somaSaldo">0,00</span></b></p>
+    <h1>📊 Dashboard</h1>
+    <p>Total de usuários: <b id="totalUsuarios">0</b></p>
+    <p>Saldo total do sistema: <b>R$ <span id="saldoTotal">0,00</span></b></p>
 </div>
 
 <!-- USUÁRIOS -->
 <div id="usuarios" class="page">
-<h1>👥 Usuários</h1>
-<table id="tabelaUsuarios">
-<tr>
-<th>Nome</th>
-<th>Email</th>
-<th>Saldo</th>
-</tr>
-</table>
+    <h1>👥 Usuários</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Saldo</th>
+            </tr>
+        </thead>
+        <tbody id="listaUsuarios"></tbody>
+    </table>
 </div>
 
-<!-- FINANCEIRO -->
+<!-- DEPÓSITOS -->
 <div id="financeiro" class="page">
-<h1>💰 Depósitos Pendentes</h1>
-<table id="tabelaDepositos">
-<tr>
-<th>Nome</th>
-<th>Email</th>
-<th>Valor</th>
-<th>CPF</th>
-<th>Status</th>
-<th>Ações</th>
-</tr>
-</table>
+    <h1>💰 Depósitos Pendentes</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Usuário</th>
+                <th>Email</th>
+                <th>Valor</th>
+                <th>CPF</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="listaDepositos"></tbody>
+    </table>
 </div>
 
 </div>
 </div>
 
 <script>
-// ===== PROTEÇÃO ADMIN =====
+/* ===== PROTEÇÃO ===== */
 let logado = localStorage.getItem("logged");
-let admin = JSON.parse(localStorage.getItem("usuarioLogado"));
-let emailAdmin = "mariaepr1702@gmail.com";
+let usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+let adminEmail = "mariaepr1702@gmail.com";
 
-if(logado !== "true" || !admin || admin.email !== emailAdmin){
-    alert("Acesso negado");
+if(logado !== "true" || !usuario || usuario.email !== adminEmail){
+    alert("Acesso negado!");
     window.location.href="index.html";
 }
 
-// ===== NAVEGAÇÃO =====
-function showPage(id){
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
-
-// ===== USUÁRIOS =====
+/* ===== DADOS ===== */
 let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+let depositos = JSON.parse(localStorage.getItem("depositos")) || [];
+
+/* ===== DASHBOARD ===== */
 document.getElementById("totalUsuarios").innerText = usuarios.length;
 
-let tabelaU = document.getElementById("tabelaUsuarios");
 let soma = 0;
+usuarios.forEach(u => soma += Number(u.saldo || 0));
+document.getElementById("saldoTotal").innerText = soma.toFixed(2);
 
+/* ===== LISTAR USUÁRIOS ===== */
+let listaUsuarios = document.getElementById("listaUsuarios");
 usuarios.forEach(u=>{
-    let saldo = Number(u.saldo || 0);
-    soma += saldo;
     let tr = document.createElement("tr");
     tr.innerHTML = `
         <td>${u.nome}</td>
         <td>${u.email}</td>
-        <td>R$ ${saldo.toFixed(2)}</td>
+        <td>R$ ${(u.saldo || 0).toFixed(2)}</td>
     `;
-    tabelaU.appendChild(tr);
+    listaUsuarios.appendChild(tr);
 });
-document.getElementById("somaSaldo").innerText = soma.toFixed(2);
 
-// ===== DEPÓSITOS =====
-let depositos = JSON.parse(localStorage.getItem("depositos")) || [];
-let tabelaD = document.getElementById("tabelaDepositos");
-renderDepositos();
+/* ===== LISTAR DEPÓSITOS ===== */
+let listaDepositos = document.getElementById("listaDepositos");
 
 function renderDepositos(){
-    tabelaD.innerHTML = `
-    <tr>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Valor</th>
-        <th>CPF</th>
-        <th>Status</th>
-        <th>Ações</th>
-    </tr>`;
+    listaDepositos.innerHTML="";
 
-    if(depositos.length === 0){
-        tabelaD.innerHTML += `<tr><td colspan="6">Nenhum depósito</td></tr>`;
+    let pendentes = depositos.filter(d => d.status === "Pendente");
+
+    if(pendentes.length === 0){
+        listaDepositos.innerHTML = `<tr><td colspan="5">Nenhum depósito pendente</td></tr>`;
         return;
     }
 
-    depositos.forEach((d,i)=>{
+    pendentes.forEach((d,i)=>{
         let tr = document.createElement("tr");
         tr.innerHTML = `
-        <td>${d.nome}</td>
-        <td>${d.email}</td>
-        <td>R$ ${Number(d.valor).toFixed(2)}</td>
-        <td>${d.cpf}</td>
-        <td>${d.status}</td>
-        <td>
-            ${d.status==="Pendente" ? `
-            <button class="btn aprovar" onclick="aprovar(${i})">Aprovar</button>
-            <button class="btn excluir" onclick="rejeitar(${i})">Excluir</button>
-            ` : "-"}
-        </td>`;
-        tabelaD.appendChild(tr);
+            <td>${d.nome}</td>
+            <td>${d.email}</td>
+            <td>R$ ${Number(d.valor).toFixed(2)}</td>
+            <td>${d.cpf}</td>
+            <td>
+                <button class="btn aprovar" onclick="aprovar(${i})">Aprovar</button>
+                <button class="btn excluir" onclick="excluir(${i})">Excluir</button>
+            </td>
+        `;
+        listaDepositos.appendChild(tr);
     });
 }
+renderDepositos();
 
-function aprovar(i){
-    let dep = depositos[i];
-    let user = usuarios.find(u=>u.email===dep.email);
+/* ===== APROVAR ===== */
+function aprovar(index){
+    let pendentes = depositos.filter(d => d.status === "Pendente");
+    let dep = pendentes[index];
+
+    let user = usuarios.find(u => u.email === dep.email);
     if(!user){
         alert("Usuário não encontrado");
         return;
     }
 
-    user.saldo = Number(user.saldo||0) + Number(dep.valor);
+    user.saldo = Number(user.saldo || 0) + Number(dep.valor);
     dep.status = "Aprovado";
 
     localStorage.setItem("usuarios", JSON.stringify(usuarios));
@@ -212,15 +211,26 @@ function aprovar(i){
     location.reload();
 }
 
-function rejeitar(i){
-    if(!confirm("Deseja excluir este depósito?")) return;
-    depositos.splice(i,1);
+/* ===== EXCLUIR ===== */
+function excluir(index){
+    let pendentes = depositos.filter(d => d.status === "Pendente");
+    let dep = pendentes[index];
+
+    let pos = depositos.indexOf(dep);
+    depositos.splice(pos,1);
+
     localStorage.setItem("depositos", JSON.stringify(depositos));
     alert("Depósito excluído");
-    renderDepositos();
+    location.reload();
 }
 
-// ===== SAIR =====
+/* ===== NAVEGAÇÃO ===== */
+function showPage(id){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+/* ===== SAIR ===== */
 function sair(){
     localStorage.clear();
     window.location.href="login.html";
